@@ -1,10 +1,9 @@
 
-![img_v2_4a7d4460-005b-4ab9-a316-472f873ec93g](https://user-images.githubusercontent.com/25078430/201826696-dea2fd8c-c643-4d93-813f-a2179ab4e779.png)
 
-# DB-Football
+# GRF MARL
 
 [![license](https://img.shields.io/badge/license-Apache_v2.0-blue.svg?style=flat)](./LICENSE)
-[![Release Version](https://img.shields.io/badge/release-0.1.0-red.svg)]()
+[![Release Version](https://img.shields.io/badge/release-1.0.0-red.svg)]()
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
 
 This repo provides a simple, distributed and asynchronous multi-agent reinforcement learning framework for the [Google Research Football](https://github.com/google-research/football) environment. Currently, it is **dedicated** for **Google Research Football** environment with the cooperative part implemented in **IPPO**/**MAPPO** and the competitive part implemented in **PSRO/Simple League**. In the future, we will also release codes for other related algorithms and environments.
@@ -25,7 +24,7 @@ Our codes are based on Light-MALib, which is a simplified version of [MALib](htt
 6. Tensorboard tags
 7. Documentation
 8. Contact
-9. Join Us
+
 
 ## Install
 You can use any tool to manage your python environment. Here, we use conda as an example.
@@ -136,25 +135,4 @@ Under construction, stay tuned :)
 ## Contact
 If you have any questions about this repo, feel free to leave an issue. You can also contact current maintainers, [YanSong97](https://github.com/YanSong97) and [DiligentPanda](https://github.com/DiligentPanda), by email.
 
-## Join Us
-Get Interested in our project? Or have great passions in:
-1. Multi-Agent Learning and Game AI
-2. Operation Research and Optimization
-3. Robotics and Control
-4. Visual and Graphic Intelligence
-5. Data Mining and so on
 
-Welcome! Why not take a look at https://digitalbrain.cn/talents?
-
-With the leading scientists, enginneers and field experts, we are going to provide **Better Decisions for Better World**!
-
-### Digital Brain Laboratory
-Digital Brain Laboratory, Shanghai, is co-founded by the founding partner and chairman of CMC Captital, Mr. Ruigang Li, and world-renowned scientist in the field of decision intelligence, Prof. Jun Wang.
-
-### Recruitment
-
-<img src='https://user-images.githubusercontent.com/25078430/201830084-ebb731db-9a84-4e37-b6e1-7dbb34bc8fc1.png' width='150px'>
-
-### Recruitment for Students & Internships
-
-<img src='https://user-images.githubusercontent.com/25078430/201830117-5ff5daf0-df66-4eee-bf82-109838d42e17.png' width='150px'>
