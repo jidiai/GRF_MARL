@@ -3,7 +3,7 @@
 # Google Research Football Multi-Agent Reinforcement Learning Library - Light-MALib
 
 [![license](https://img.shields.io/badge/license-Apache_v2.0-blue.svg?style=flat)](./LICENSE)
-[![Release Version](https://img.shields.io/badge/release-1.0.0-red.svg)]()
+[![Release Version](https://img.shields.io/badge/release-1.1-red.svg)]()
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
 
 This repo provides a simple, distributed and asynchronous multi-agent reinforcement learning framework for the [Google Research Football](https://github.com/google-research/football) environment, along with research tools and results for benchmarking. In particular, it includes:
