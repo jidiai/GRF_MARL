@@ -15,7 +15,7 @@ To run an experiment, simple execute the following command with configuration fi
 
     python3 light_malib/main_pb.py --config cooperative_MARL_benchmark/xxx/.../xxx.yaml
 
-All the configuration files can be found in ``.cooperative_MARL_benchmark/``, including those for academy scenarios, full-game scenarios and a PSRO trial.
+All the configuration files can be found in ``.expr_configs/``, including those for academy scenarios, full-game scenarios and a PSRO trial.
 
 
 
