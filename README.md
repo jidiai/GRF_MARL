@@ -1,6 +1,6 @@
 
 
-# Google Research Football Multi-Agent Reinforcement Learning Library - Light-MALib
+# Google Research Football Multi-Agent Reinforcement Learning Library (GRF MARL Lib)
 
 [![license](https://img.shields.io/badge/license-Apache_v2.0-blue.svg?style=flat)](./LICENSE)
 [![Release Version](https://img.shields.io/badge/release-1.1-red.svg)]()
@@ -15,33 +15,19 @@ This repo provides a simple, distributed and asynchronous multi-agent reinforcem
 - Single-step match replay debugger
 - Tutorial for GRF online ranking
 
-
-
-
-
-[//]: # (Our codes are based on Light-MALib, which is a simplified version of [MALib]&#40;https://github.com/sjtu-marl/malib&#41; with restricted algorithms and environments but certain enhancements, like distributed async-training, league-like multiple population training, detailed tensorboard logging. If you are also interested in other Multi-Agent Learning algorithms and environments, you may also refer to [MALib]&#40;https://github.com/sjtu-marl/malib&#41; for more details.)
-
-[//]: # (<img src="imgs/L_MALib.svg" width="500px">)
-
+----
 
 ## Contents
+- [Install](#install)
+- [Execution](#execution)
+- [Scenarios and algorithms](#scenarios-and-algorithms)
+- [Framework architecture](#framework-architecture)
+- [Google Reseach Football Toolkit](#google-reseach-football-toolkit)
+- [Pre-trained policies](#pre-trained-policies)
+- [Tensorboard tags explained](#tensorboard-tags-explained)
+- [Contact](#contact)
 
-1. Install
-
-2. Execution
-
-3. Scenarios and algorithms
-
-4. Framework architecture
-
-5. Google Research Football Toolkit
-
-6. Pre-trained policies
-
-7. Tensorboard tags explained
-
-8. Contact
-
+----
 
 ## Install
 You can use any tool to manage your python environment. Here, we use conda as an example.
@@ -57,6 +43,9 @@ pip install -r requirements.txt
 5. Follow the instructions in the official website https://pytorch.org/get-started/locally/ to install PyTorch (for example, version 1.13.0+cu116).
 6. Follow the instructions in the official repo https://github.com/google-research/football and install the Google Research Football environment.
 
+[Return to Contents](#contents)
+
+----
 
 ## Execution
 After installation, run an example experiment by executing the following command from the home folder:
@@ -67,10 +56,14 @@ where `PATH_TO_CONFIG` is the relative path of the experiment configuration file
 
 To run experiments on a small cluster, please follow [ray](https://docs.ray.io/en/latest/ray-core/starting-ray.html)'s official instructions to start a cluster. For example, use `ray start --head` on the master, then connect other machines to the master following the hints from command line output.
 
+[Return to Contents](#contents)
+
+----
+
 ## Scenarios and algorithms
 We support multiple algorithm training on benchmark scenarios.
 
-### [scenarios](light_malib/envs/gr_football/scenarios/)
+### [Scenarios](light_malib/envs/gr_football/scenarios/)
 
 - **Pass and shot with keeper (2v1)**: A 3 vs 2 academy game. Two left-team players start at the right half, competing against one right-team defense player and the goalkeeper.
 The episode terminates when: a. reaches maximum duration (400 steps); b. ball is out of bounds; c. one team scores; d. ball ownership changes.
@@ -86,7 +79,7 @@ reaches the maximum duration (3,000 steps). The
 second half begins at the 1501st step and two
 teams will swap sides.
 
-### [Algorithm](light_malib/algorithm/)
+### [Algorithms](light_malib/algorithm/)
 
 - **Independent PPO (IPPO)**
 - **Multi-Agent PPO (MAPPO)**
@@ -94,7 +87,9 @@ teams will swap sides.
 - **Agent-by-agent Policy Optimization (A2PO)**
 - **Multi-Agent Transformer (MAT)**
 
+[Return to Contents](#contents)
 
+----
 
 ## Framework architecture
 <div style="text-align:center">
@@ -125,9 +120,9 @@ Beside training against a fixed opponent, Light-MALib also supports population-b
 <img src="imgs/psro_trial.png" width="500" >
 </div>
 
+[Return to Contents](#contents)
 
-
-
+----
 
 ## Google Reseach Football Toolkit
 Currently, we provide the following tools for better study in the field of Football AI.
@@ -139,6 +134,10 @@ Currently, we provide the following tools for better study in the field of Footb
 
 <img src='imgs/debugger_panels.png' width='600px'>
 
+[Return to Contents](#contents)
+
+----
+
 ## [Pre-trained policies](light_malib/trained_models/gr_football/)
 At this stage, we release some of our trained model for use as initializations or opponents. 
 
@@ -148,6 +147,9 @@ At this stage, we release some of our trained model for use as initializations o
 ### 11-vs-11 full-game
 <img src='imgs/radar_11v11.svg' width='400px'>
 
+[Return to Contents](#contents)
+
+----
 
 ## Tensorboard tags explained
 
@@ -208,7 +210,9 @@ TrainingTimer:
 9. `trainer_data`: timer for get data from `local_queue`;
 10. `trainer_optimize`: timer for a optimization step in the trainer;
 
+[Return to Contents](#contents)
 
+----
 
 ## Contact
 If you have any questions about this repo, feel free to leave an issue. You can also contact current maintainers, [YanSong97](https://github.com/YanSong97) and [DiligentPanda](https://github.com/DiligentPanda), by email.
