@@ -1,3 +1,5 @@
+# Single-Step Visual Debugger
+
 1. The 1st Method: use the official `.dump` file by set `write_full_episode_dumps=True` in the environment. 
     use `load_from_official_trace()` function to read the `.dump` file and pass into visualizer for replay.
     ```python
@@ -9,7 +11,7 @@
     visualizer=Visualizer(tracer,disable_RGB=True)
     visualizer.run()
     ```
-2. The 2nd Method: use `Tracer` class to record the match (you may refer to `test_tracer.py` for another example).
+2. The 2nd Method: use `MatchTracer` instance to record the match (you may refer to `test_tracer.py` for another example).
     ```python
     from tracer import MatchTracer
     class FooballEnv:
@@ -41,3 +43,5 @@
     ```
 
 NOTE: If you want to watch RGB frames as well in replay, you need to set `render=True` in the environment.
+
+[Return to the main README](../../../../README.md#google-reseach-football-toolkit)

@@ -126,11 +126,15 @@ Beside training against a fixed opponent, Light-MALib also supports population-b
 
 ## Google Reseach Football Toolkit
 Currently, we provide the following tools for better study in the field of Football AI.
-1. [Google Football Game Graph](light_malib/envs/gr_football/game_graph/): A data structure representing a game as a tree structure with branching indicating important events like goals or intercepts.
+### [Google Football Game Graph](light_malib/envs/gr_football/game_graph/)
+
+A data structure representing a game as a tree structure with branching indicating important events like goals or intercepts. See its usage in [README](light_malib/envs/gr_football/game_graph/README.md).
 
 <img src='docs/source/images/grf_data_structure.svg'>
 
-2. [Google Football Game Debugger](light_malib/envs/gr_football/debugger/): A single-step graphical debugger illustrating both 3D and 2D frames with detailed frame data, such as the movements of players and the ball.
+### [Google Football Game Debugger](light_malib/envs/gr_football/debugger/):
+
+A single-step graphical debugger illustrating both 3D and 2D frames with detailed frame data, such as the movements of players and the ball. See its usage in [README](light_malib/envs/gr_football/debugger/README.md).
 
 <img src='docs/source/images/debugger_panels.png' width='600px'>
 
