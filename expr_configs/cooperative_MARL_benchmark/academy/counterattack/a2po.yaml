@@ -1,5 +1,5 @@
 expr_group: gr_football
-expr_name: benchmark_academy_corner_mappo
+expr_name: benchmark_academy_counterattack_a2po
 log_dir: ./logs             #log directory
 seed: 0
 eval_only: False            #True if only want evaluation
@@ -213,7 +213,7 @@ populations:
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False
-        ppo_epoch: 10
+        ppo_epoch: 5
         num_mini_batch: 1  # the number of mini-batches
         
         return_mode: new_gae
@@ -235,6 +235,8 @@ populations:
         entropy_coef: 0.00
         clip_param: 0.2
         # kl_early_stop: 0.01
+        use_agent_block: true
+        block_num: 2
 
         use_modified_mappo: False
 

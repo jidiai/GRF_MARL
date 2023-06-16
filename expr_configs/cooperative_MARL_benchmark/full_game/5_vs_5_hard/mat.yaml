@@ -1,5 +1,5 @@
 expr_group: gr_football
-expr_name: full_game_4_vs_4_hard_a2po
+expr_name: benchmark_full_game_5_vs_5_hard_mat
 log_dir: ./logs             # log directory
 seed: 0
 eval_only: False            # True if only want evaluation
@@ -29,7 +29,7 @@ agent_manager:
   share_policies: False
 
 evaluation_manager:
-  num_eval_rollouts: 50
+  num_eval_rollouts: 1
 
 policy_data_manager:
   update_func: "gr_football" 
@@ -96,7 +96,7 @@ rollout_manager:
       - cls: "gr_football"
         id_prefix: "gr_footbal"
         scenario_config:
-          env_name: "benchmark_full_game_4_vs_4_hard"
+          env_name: "benchmark_full_game_5_vs_5_hard"
           number_of_left_players_agent_controls: 4
           number_of_right_players_agent_controls: 1
           representation: "raw"
@@ -148,6 +148,7 @@ training_manager:
     optimizer: "Adam"
     actor_lr: 5.e-4
     critic_lr: 5.e-4
+    backbone_lr: 5.e-4
     opti_eps: 1.e-5
     weight_decay: 0.0
     lr_decay: False            #update_linear_schedule
@@ -180,48 +181,32 @@ populations:
     algorithm:
       name: "MAPPO"
       model_config:
-        model: "gr_football.basic_centralized_critic_pool_obs"       # model type
+        model: "gr_football.basic_mat"       # model type
+        backbone:
+          num_agents: 4 # number of training agents
+          embed_dim: 115
+          num_blocks: 1
+          num_heads: 1
+          encode_state: False
+        actor:
+          dec_actor: False
+          share_actor: False
+        critic:
         initialization:
           use_orthogonal: True
           gain: 1.
-        actor:
-          network: mlp
-          layers:
-            - units: 256
-              activation: ReLU
-            - units: 128
-              activation: ReLU
-            - units: 64
-              activation: ReLU
-          output:
-            activation: False
-        critic:
-          network: mlp
-          layers:
-            - units: 256
-              activation: ReLU
-            - units: 128
-              activation: ReLU
-            - units: 64
-              activation: ReLU
-          output:
-            activation: False
 
       # set hyper parameter
       custom_config:
-        FE_cfg:
-          num_players: 10    #config sent to the Feature Encoder
-        sub_algorithm_name: A2PO
-        num_agents: 4 
-        other_clip_param: 0.125
-
+        FE_cfg:          # config sent to the Feature Encoder
+          num_players: 10   # total number of players on the pitch  
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False
-        ppo_epoch: 5
+        ppo_epoch: 20
         num_mini_batch: 1  # the number of mini-batches
         
-        return_mode: new_gae_trace
+        return_mode: new_gae
         gae:
           gae_lambda: 0.95
         vtrace:
@@ -237,8 +222,9 @@ populations:
         use_popart: True
         popart_beta: 0.99999
 
-        entropy_coef: 0.00
+        entropy_coef: 0.0
         clip_param: 0.2
+        max_grad_norm: 10
         # kl_early_stop: 0.01
 
         use_modified_mappo: False
