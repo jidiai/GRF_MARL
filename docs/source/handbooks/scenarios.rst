@@ -11,6 +11,7 @@ Here we include our benchmark GRF multi-agent scenario description
     :local:
     :depth: 1
 
+The source code for each scenario can be found in ``light_malib/envs/gr_football/scenarios/...``
 
 .. _2v1:
 

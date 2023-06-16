@@ -29,7 +29,6 @@ A Google Research Football Multi-Agent Reinforcement Learning Library (GRF MARL 
    algorithm/independent
    algorithm/CTDE
    algorithm/fully_decentralized
-   algorithm/value
 
 .. toctree::
    :maxdepth: 2

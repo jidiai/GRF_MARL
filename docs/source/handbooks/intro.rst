@@ -3,7 +3,7 @@
 Introduction
 ============
 
-This repo provides a simple, distributed and asynchronous multi-agent reinforcement learning framework for
+This repository provides a simple, distributed and asynchronous multi-agent reinforcement learning framework for
 the `Google Research Football <https://github.com/google-research/football>`_ environment, along with research tools and results for benchmarking.
 In particular, it includes:
 
@@ -15,5 +15,8 @@ In particular, it includes:
 #. Single-step match replay debugger
 #. Tutorial for GRF online ranking
 
+The goal is to provide standard benchmark results on Google Research Football scenarios which has been
+investigated in many MARL works, as well as to further boost the studies of Multi-agent reinforcement learning
+on GRF by offering advanced research tools targeting at generally stronger football AI.
 
 
