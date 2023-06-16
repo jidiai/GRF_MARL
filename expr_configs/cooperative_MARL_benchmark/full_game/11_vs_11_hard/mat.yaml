@@ -1,8 +1,8 @@
 expr_group: gr_football
-expr_name: benchmark_academy_corner_mat
-log_dir: ./logs             #log directory
+expr_name: benchmark_full_game_11_v_11_hard_mat
+log_dir: ./logs             # log directory
 seed: 0
-eval_only: False            #True if only want evaluation
+eval_only: False            # True if only want evaluation
 
 distributed:
   use: False
@@ -15,15 +15,15 @@ distributed:
       - ip:
 
 framework:
-  name: "psro"                #framework name
-  max_rounds: 1         #psro rounds
-  meta_solver: "nash"         #'nash', 'uniform', 'pfsp'
-  sync_training: True   # TODO[jh]: on_policy, sync_off_policy, async_off_policy
+  name: "psro"                # framework name
+  max_rounds: 1         # psro rounds
+  meta_solver: "nash"         # 'nash', 'uniform', 'pfsp'
+  sync_training: True        # TODO[jh]: on_policy, sync_off_policy, async_off_policy
   stopper:
     type: "win_rate_stopper"
     kwargs:
-      min_win_rate: 1.1
-      max_steps: 1100          #iteration at each psro round
+      min_win_rate: 1.0
+      max_steps: 700          #iteration at each psro round
 agent_manager:
   num_agents: 2
   share_policies: False
@@ -67,12 +67,12 @@ rollout_manager:
       num_cpus: 1
       resources:
         - ["node:${distributed.nodes.master.ip}",0.01]
-  num_workers: 80     # numbers of parallel rollout worker, one env per worker by default
+  num_workers: 60     # numbers of parallel rollout worker, one env per worker by default
   seed: 12345
   saving_interval: 100 # the frequency of dumping model's weight
   batch_size: ${rollout_manager.num_workers}
   eval_batch_size: 100
-  eval_freq: 50 # epochs
+  eval_freq: 100 # epochs
   rollout_metric_cfgs:
     reward:
       type: "sliding"
@@ -86,17 +86,17 @@ rollout_manager:
     distributed:
       resources:
         num_cpus: 1
-    rollout_length: 400                                    #episode length
-    eval_rollout_length: 400
-    sample_length: 0                                     #every $sample_length traj will be push to buffer during rollout
+    rollout_length: 3001                                    # episode length
+    eval_rollout_length: 3001
+    sample_length: 0                                     # every $sample_length traj will be push to buffer during rollout
     padding_length: # of not use in gr_football
     rollout_func_name: "rollout_func"
-    episode_mode: "traj"
+    episode_mode: 'traj'                                    # traj or time-step
     envs:
       - cls: "gr_football"
         id_prefix: "gr_footbal"
         scenario_config:
-          env_name: "benchmark_academy_counterattack_hard"
+          env_name: "benchmark_full_game_11_vs_11_hard"
           number_of_left_players_agent_controls: 10
           number_of_right_players_agent_controls: 1
           representation: "raw"
@@ -116,6 +116,7 @@ rollout_manager:
       init_noise: 0             #random exploration noise level
       total_epoch_to_zero: 2000    #number of epoch when exploration noise decay to zero
       interval: 400                #number of epoch at each fixed exploration noise level
+
 
 training_manager:
   distributed:
@@ -147,6 +148,7 @@ training_manager:
     optimizer: "Adam"
     actor_lr: 5.e-4
     critic_lr: 5.e-4
+    backbone_lr: 5.e-4
     opti_eps: 1.e-5
     weight_decay: 0.0
     lr_decay: False            #update_linear_schedule
@@ -196,14 +198,14 @@ populations:
 
       # set hyper parameter
       custom_config:
-        FE_cfg:
-          num_players: 22    #config sent to the Feature Encoder
+        FE_cfg:          # config sent to the Feature Encoder
+          num_players: 22   # total number of players on the pitch
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False
         ppo_epoch: 10
         num_mini_batch: 1  # the number of mini-batches
-
+        
         return_mode: new_gae
         gae:
           gae_lambda: 0.95
@@ -233,7 +235,7 @@ populations:
           init_cfg:
             - condition: "==0" # condition if True in order
               strategy: random # now support pretrained, inherit_last, random
-              policy_id:
+              policy_id: 
               policy_dir:
           initial_policies:
 
@@ -242,6 +244,6 @@ populations:
           init_cfg:
             - condition: "==0" # condition if True in order
               strategy: pretrained # now support pretrained, inherit_last, random
-              policy_id: built_in_5
+              policy_id: built_in
               policy_dir: light_malib/trained_models/gr_football/5_vs_5/built_in
-          initial_policies:
+          initial_policies:                         #initial population

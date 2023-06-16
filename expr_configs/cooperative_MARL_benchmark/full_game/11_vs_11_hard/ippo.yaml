@@ -1,5 +1,5 @@
 expr_group: gr_football
-expr_name: full_game_11_vs_11_hard_a2po
+expr_name: full_game_10_vs_10_hard_ippo
 log_dir: ./logs             # log directory
 seed: 0
 eval_only: False            # True if only want evaluation
@@ -22,7 +22,7 @@ framework:
   stopper:
     type: "win_rate_stopper"
     kwargs:
-      min_win_rate: 1.0
+      min_win_rate: 1.1
       max_steps: 700          #iteration at each psro round
 agent_manager:
   num_agents: 2
@@ -96,7 +96,7 @@ rollout_manager:
       - cls: "gr_football"
         id_prefix: "gr_footbal"
         scenario_config:
-          env_name: "benchmark_full_game_10_vs_10_hard"
+          env_name: "benchmark_full_game_11_vs_11_hard"
           number_of_left_players_agent_controls: 10
           number_of_right_players_agent_controls: 1
           representation: "raw"
@@ -179,7 +179,7 @@ populations:
     algorithm:
       name: "MAPPO"
       model_config:
-        model: "gr_football.basic_centralized_critic_pool_obs"       # model type
+        model: "gr_football.basic"       # model type
         initialization:
           use_orthogonal: True
           gain: 1.
@@ -210,17 +210,13 @@ populations:
       custom_config:
         FE_cfg:
           num_players: 22    #config sent to the Feature Encoder
-        sub_algorithm_name: A2PO
-        num_agents: 10
-        other_clip_param: 0.125
-
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False
-        ppo_epoch: 2
+        ppo_epoch: 10
         num_mini_batch: 1  # the number of mini-batches
         
-        return_mode: new_gae_trace
+        return_mode: new_gae
         gae:
           gae_lambda: 0.95
         vtrace:
@@ -239,8 +235,6 @@ populations:
         entropy_coef: 0.00
         clip_param: 0.2
         # kl_early_stop: 0.01
-        use_agent_block: true
-        block_num: 5
 
         use_modified_mappo: False
 
@@ -260,5 +254,5 @@ populations:
             - condition: "==0" # condition if True in order
               strategy: pretrained # now support pretrained, inherit_last, random
               policy_id: built_in
-              policy_dir: light_malib/trained_models/gr_football/5_vs_5/built_in
+              policy_dir: light_malib/trained_models/gr_football/11_vs_11/built_in
           initial_policies:                         #initial population

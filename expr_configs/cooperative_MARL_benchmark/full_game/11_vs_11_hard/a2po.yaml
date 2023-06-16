@@ -1,5 +1,5 @@
 expr_group: gr_football
-expr_name: full_game_4_vs_4_hard_ippo
+expr_name: full_game_11_vs_11_hard_a2po
 log_dir: ./logs             # log directory
 seed: 0
 eval_only: False            # True if only want evaluation
@@ -22,7 +22,7 @@ framework:
   stopper:
     type: "win_rate_stopper"
     kwargs:
-      min_win_rate: 1.1
+      min_win_rate: 1.0
       max_steps: 700          #iteration at each psro round
 agent_manager:
   num_agents: 2
@@ -67,7 +67,7 @@ rollout_manager:
       num_cpus: 1
       resources:
         - ["node:${distributed.nodes.master.ip}",0.01]
-  num_workers: 80     # numbers of parallel rollout worker, one env per worker by default
+  num_workers: 60     # numbers of parallel rollout worker, one env per worker by default
   seed: 12345
   saving_interval: 100 # the frequency of dumping model's weight
   batch_size: ${rollout_manager.num_workers}
@@ -96,8 +96,8 @@ rollout_manager:
       - cls: "gr_football"
         id_prefix: "gr_footbal"
         scenario_config:
-          env_name: "benchmark_full_game_4_vs_4_hard"
-          number_of_left_players_agent_controls: 4
+          env_name: "benchmark_full_game_11_vs_11_hard"
+          number_of_left_players_agent_controls: 10
           number_of_right_players_agent_controls: 1
           representation: "raw"
           rewards: "scoring,checkpoints"
@@ -179,7 +179,7 @@ populations:
     algorithm:
       name: "MAPPO"
       model_config:
-        model: "gr_football.basic"       # model type
+        model: "gr_football.basic_centralized_critic_pool_obs"       # model type
         initialization:
           use_orthogonal: True
           gain: 1.
@@ -209,14 +209,18 @@ populations:
       # set hyper parameter
       custom_config:
         FE_cfg:
-          num_players: 10    #config sent to the Feature Encoder
+          num_players: 22    #config sent to the Feature Encoder
+        sub_algorithm_name: A2PO
+        num_agents: 10
+        other_clip_param: 0.125
+
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False
-        ppo_epoch: 20
+        ppo_epoch: 2
         num_mini_batch: 1  # the number of mini-batches
         
-        return_mode: new_gae
+        return_mode: new_gae_trace
         gae:
           gae_lambda: 0.95
         vtrace:
@@ -235,6 +239,8 @@ populations:
         entropy_coef: 0.00
         clip_param: 0.2
         # kl_early_stop: 0.01
+        use_agent_block: true
+        block_num: 5
 
         use_modified_mappo: False
 

@@ -20,7 +20,8 @@ This repo provides a simple, distributed and asynchronous multi-agent reinforcem
 ## Contents
 - [Install](#install)
 - [Execution](#execution)
-- [Scenarios and algorithms](#scenarios-and-algorithms)
+- [Cooperative MARL benchmark](#cooperative-marl-benchmark)
+- [Population-based self-play training](#population-based-self-play-training)
 - [Framework architecture](#framework-architecture)
 - [Google Reseach Football Toolkit](#google-reseach-football-toolkit)
 - [Pre-trained policies](#pre-trained-policies)
@@ -60,8 +61,8 @@ To run experiments on a small cluster, please follow [ray](https://docs.ray.io/e
 
 ----
 
-## Scenarios and algorithms
-We support multiple algorithm training on benchmark scenarios.
+## Cooperative MARL Benchmark
+We support multiple algorithms on benchmark scenarios.
 
 ### [Scenarios](light_malib/envs/gr_football/scenarios/)
 
@@ -79,13 +80,54 @@ reaches the maximum duration (3,000 steps). The
 second half begins at the 1501st step and two
 teams will swap sides.
 
-### [Algorithms](light_malib/algorithm/)
+### [Supported algorithms](light_malib/algorithm/)
 
 - **Independent PPO (IPPO)**
 - **Multi-Agent PPO (MAPPO)**
 - **Heterogeneous-Agent PPO (HAPPO)**
 - **Agent-by-agent Policy Optimization (A2PO)**
 - **Multi-Agent Transformer (MAT)**
+
+### Experiment configurations
+The experiment configurations are listed under [this folder](expr_configs/cooperative_MARL_benchmark).
+Your can run an experiment, for example,  by
+```python
+python3 light_malib/main_pbt.py --config expr_configs/cooperative_MARL_benchmark/academy/pass_and_shoot_with_keeper/ippo.yaml
+```
+
+[Return to Contents](#contents)
+
+----
+
+## Population-based self-play training 
+### [Scenarios](light_malib/envs/gr_football/scenarios/)
+- **5-vs-5 full-game (5v5)**
+- **11-vs-11 full-game (11v11)**
+
+
+### [Supported algorithms](light_malib/framework/scheduler/)
+
+- **Policy Space Response Oracle (PSRO)**
+- **League Training** 
+
+
+### Experiment configurations
+The experiment configurations are listed under [this folder](expr_configs/population_based_self_play).
+Your can run an experiment, for example,  by
+```python
+python3 light_malib/main_pbt.py --config expr_configs/population_based_self_play/ippo_5v5_hard_psro.yaml
+```
+
+### [Pretrained policies](light_malib/trained_models/gr_football/)
+
+We offer some pre-trained policies for study in both 5-vs-5 and 11-vs-11 full-game scenarios. You probably want use them as opponents or for initalization. Please refer to [this section](#pre-trained-policies).
+
+<!-- #### 5-vs-5 full-game
+<img src='docs/source/images/radar_5v5.svg' width='400px'>
+
+#### 11-vs-11 full-game
+<img src='docs/source/images/radar_11v11.svg' width='400px'> -->
+
 
 [Return to Contents](#contents)
 
