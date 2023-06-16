@@ -1,15 +1,15 @@
-1. （方法1）利用官方环境设置中的`write_full_episode_dumps=True`保存官方的`.dump`文件。
-    用`load_from_official_trace()`函数读取，传入visualizer回放。
+1. The 1st Method: use the official `.dump` file by set `write_full_episode_dumps=True` in the environment. 
+    use `load_from_official_trace()` function to read the `.dump` file and pass into visualizer for replay.
     ```python
     from tracer import MatchTracer
     from v.visualizer import Visualizer
 
     tracer=MatchTracer.load_from_official_trace("data/episode_done_20220426-213219251284.dump")
-    # disable_RGB=True 不加载RGB图像
+    # disable_RGB=True means don't load RGB frames, which might be slower.
     visualizer=Visualizer(tracer,disable_RGB=True)
     visualizer.run()
     ```
-2. （方法2）参照test_tracer.py在env中记录整场游戏的进行情况。如果env启用了render，会把渲染的每一帧RGB图像保存下来，因为没压成video，也没有resize，所以导致trace的体积庞大，但是回放中可以看RGB图像。
+2. The 2nd Method: use `Tracer` class to record the match (you may refer to `test_tracer.py` for another example).
     ```python
     from tracer import MatchTracer
     class FooballEnv:
@@ -17,7 +17,7 @@
             self._env=...
 
         def reset(self):
-            # no_frame=True 一定不保存RGB图像
+            # no_frame=True means not to store RGB frames.
             self.tracer=MatchTracer(no_frame=True)
             self._observations=self._env.reset()
         
@@ -29,13 +29,15 @@
                 self.tracer.save(fn=...)
     ```
 
-    用`load()`函数读取，传入visualizer回放。
+    use `load()` function to read `.tracer` file and pass into visualizer for replay.
     ```python
     from tracer import MatchTracer
     from v.visualizer import Visualizer
 
     tracer=MatchTracer.load("data/random_play_trace.pkl")
-    # disable_RGB=True 不加载RGB图像
+    # disable_RGB=True means don't load RGB frames, which might be slower.
     visualizer=Visualizer(tracer,disable_RGB=True)
     visualizer.run()
     ```
+
+NOTE: If you want to watch RGB frames as well in replay, you need to set `render=True` in the environment.
