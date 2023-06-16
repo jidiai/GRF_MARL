@@ -28,16 +28,9 @@ A Google Research Football Multi-Agent Reinforcement Learning Library (GRF MARL 
    :maxdepth: 2
    :caption: Algorithm Documentation
 
-   algorithm/independent
-   algorithm/CTDE
-   algorithm/fully_decentralized
+   algorithm/cooperative
+   algorithm/competitive
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Population-based Training
-
-   pbt/psro
-   pbt/league
 
 .. toctree::
    :maxdepth: 2

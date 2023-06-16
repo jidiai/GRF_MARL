@@ -13,7 +13,7 @@ To run an experiment, simple execute the following command with configuration fi
 
 .. code-block:: shell
 
-    python3 light_malib/main_pb.py --config cooperative_MARL_benchmark/xxx/.../xxx.yaml
+    python3 light_malib/main_pb.py --config expr_configs/xxx/.../xxx.yaml
 
 All the configuration files can be found in ``.expr_configs/``, including those for academy scenarios, full-game scenarios and a PSRO trial.
 
