@@ -1,3 +1,5 @@
+.. _PSRO:
+
 Policy-Space Response Oracle
 ======================================================================
 
@@ -7,7 +9,3 @@ Policy-Space Response Oracle
 
 ----------------------
 
-.. _PSRO:
-
-Policy-Space Response Oracle
-====================================

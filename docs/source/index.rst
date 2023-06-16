@@ -11,6 +11,8 @@ A Google Research Football Multi-Agent Reinforcement Learning Library (GRF MARL 
     :width: 700
     :alt: 11-vs-11 game replay
 
+    11-vs-11 full-game replay
+
 
 .. toctree::
    :maxdepth: 2
