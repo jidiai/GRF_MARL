@@ -137,7 +137,7 @@ Currently, we provide the following tools for better study in the field of Footb
 
 2. [Google Football Game Debugger](light_malib/envs/gr_football/debugger/): A single-step graphical debugger illustrating both 3D and 2D frames with detailed frame data, such as the movements of players and the ball.
 
-<img src='imgs/grf_debugger.svg' width='600px'>
+<img src='imgs/debugger_panels.png' width='600px'>
 
 ## [Pre-trained policies](light_malib/trained_models/gr_football/)
 At this stage, we release some of our trained model for use as initializations or opponents. 

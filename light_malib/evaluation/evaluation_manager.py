@@ -22,7 +22,7 @@ from light_malib.utils.logger import Logger
 from .elo import EloManager
 from .melo import MEloManager
 
-from open_spiel.python.egt import alpharank, utils as alpharank_utils
+# from open_spiel.python.egt import alpharank, utils as alpharank_utils
 import nashpy as nash
 
 
