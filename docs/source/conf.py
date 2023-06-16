@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Light-MALib'
+project = 'GRF MARL Lib'
 copyright = '2023, Yan Song and He Jiang'
 author = 'Yan Song and He Jiang'
 release = 'v1.1'

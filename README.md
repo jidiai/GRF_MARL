@@ -93,7 +93,7 @@ teams will swap sides.
 
 ## Framework architecture
 <div style="text-align:center">
-<img src="imgs/framework.png" width="500" >
+<img src="docs/source/images/framework.png" width="500" >
 </div>
 
 Our framework design draws great inspiration from MALib and RLlib. It has five major components, each serving a specific role:
@@ -117,7 +117,7 @@ on computed statistics retrieved from the Agent Manager.
 
 Beside training against a fixed opponent, Light-MALib also supports population-based training, such as Policy-Space Response Oracle (PSRO). An illustration of a PSRO trial is given as below:
 <div style="text-align:center">
-<img src="imgs/psro_trial.png" width="500" >
+<img src="docs/source/images/psro.svg" width="500" >
 </div>
 
 [Return to Contents](#contents)
@@ -128,11 +128,11 @@ Beside training against a fixed opponent, Light-MALib also supports population-b
 Currently, we provide the following tools for better study in the field of Football AI.
 1. [Google Football Game Graph](light_malib/envs/gr_football/game_graph/): A data structure representing a game as a tree structure with branching indicating important events like goals or intercepts.
 
-<img src='imgs/grf_data_structure.svg'>
+<img src='docs/source/images/grf_data_structure.svg'>
 
 2. [Google Football Game Debugger](light_malib/envs/gr_football/debugger/): A single-step graphical debugger illustrating both 3D and 2D frames with detailed frame data, such as the movements of players and the ball.
 
-<img src='imgs/debugger_panels.png' width='600px'>
+<img src='docs/source/images/debugger_panels.png' width='600px'>
 
 [Return to Contents](#contents)
 
@@ -142,10 +142,10 @@ Currently, we provide the following tools for better study in the field of Footb
 At this stage, we release some of our trained model for use as initializations or opponents. 
 
 ### 5-vs-5 full-game
-<img src='imgs/radar_5v5.svg' width='400px'>
+<img src='docs/source/images/radar_5v5.svg' width='400px'>
 
 ### 11-vs-11 full-game
-<img src='imgs/radar_11v11.svg' width='400px'>
+<img src='docs/source/images/radar_11v11.svg' width='400px'>
 
 [Return to Contents](#contents)
 
