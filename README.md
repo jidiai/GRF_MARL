@@ -13,7 +13,7 @@ This repo provides a simple, distributed and asynchronous multi-agent reinforcem
 - Population-based training pipline, such as PSRO and League Training
 - Pre-trained GRF policies in both 5-vs-5 and 11-vs-11 full-game scenarios
 - Single-step match replay debugger
-- Tutorial for GRF online ranking
+- [Tutorial for GRF online ranking](https://github.com/jidiai/ai_lib/blob/master/assets/Jidi%20tutorial.pdf)
 
 ----
 
