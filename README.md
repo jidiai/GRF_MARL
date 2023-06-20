@@ -15,7 +15,7 @@ This repo provides a simple, distributed and asynchronous multi-agent reinforcem
 - Single-step match replay debugger
 - [Tutorial for GRF online ranking](https://github.com/jidiai/ai_lib/blob/master/assets/Jidi%20tutorial.pdf)
 
-Documentation: [grf-marl.readthedocs.io/](grf-marl.readthedocs.io/)
+Documentation: [grf-marl.readthedocs.io/](https://grf-marl.readthedocs.io/)
 
 ----
 
