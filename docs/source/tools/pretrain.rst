@@ -17,7 +17,7 @@ Here we provide our pre-trained models on both 5-vs-5 and 11-vs-11 full-game mul
 Each corresponding folder contains three files: the actor and the critic models (PyTorch) and the model description. These models are currently coupled with the framework and we will
 describe how to use them for various purpose:
 
-#. **As a generally strong opponent to compete with.** And a specific opponent policy and encourage learning of counter-strategies.
+- **As a generally strong opponent to compete with.** And a specific opponent policy and encourage learning of counter-strategies.
 
 **How to Use**: pre-trained models are ready for loading as long as you put their relative path in the ``population.init_policies`` section of a configuration ``.yaml`` file. For example, in
 config file ``expr_configs/cooperative_MARL_benchmark/full_game/5_vs_5_hard/ippo.yaml``. The default setup for ``population.init_policies`` is shown as below:
@@ -50,13 +50,13 @@ config file ``expr_configs/cooperative_MARL_benchmark/full_game/5_vs_5_hard/ippo
 
 The path for ``built_in`` policy in ``agent_1`` can be changed to other pre-trained policies if you want to best response to different strategies.
 
-#. As a good model initialization to continue training on, largely saving skills learning time. Initializing from a pre-trained policy can inherit its style-of-play as well.
+- As a good model initialization to continue training on, largely saving skills learning time. Initializing from a pre-trained policy can inherit its style-of-play as well.
 
 **How to Use:** similar to previous one, we can switch the tag ``strategy: random`` in ``agent_0`` to ``strategy: pre-trained`` and specify policy name and path in ``policy_id`` and
 ``policy_dir``.
 
 
-#. As a quality data generator which yields data with good exploration;
+- As a quality data generator which yields data with good exploration;
 
 **How to Use**: this involve using the `light_malib/algorithm/bc` algorithm to train a behaviour cloning policy.
 

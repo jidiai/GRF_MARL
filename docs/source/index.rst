@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-A Google Research Football Multi-Agent Reinforcement Learning Library (GRF MARL Lib)
+A Google Research Football Multi-Agent Reinforcement Learning Library (GRF MARLLib)
 =======================================
 
 .. figure:: images/game_replay.gif
@@ -16,7 +16,7 @@ A Google Research Football Multi-Agent Reinforcement Learning Library (GRF MARL 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Light-MALib Handbook
+   :caption: GRF-MARLLib Handbook
 
    handbooks/intro
    handbooks/install

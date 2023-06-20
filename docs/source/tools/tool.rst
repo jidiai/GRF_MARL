@@ -1,9 +1,10 @@
-Research Toolkits
+Single-Step Visual Debugger
 ======================================================================
 
 .. contents::
     :local:
-    :depth: 3
+    :depth: 2
 
 ----------------------
 
+See ``light_malib/envs/gr_football/debugger``

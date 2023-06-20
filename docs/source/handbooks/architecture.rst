@@ -1,22 +1,17 @@
-.. _architecture:
-
-*******************************
 Framework Architecture
-*******************************
-
+==============================
 
 Here we introduce our framework architecture. The design draws great inspiration from `MALib <https://github.com/sjtu-marl/malib>`_
 and `RLLib <https://github.com/ray-project/ray/tree/master/rllib>`_.
 
 .. contents::
     :local:
-    :depth: 1
+    :depth: 2
 
 
-.. _workflow:
 
 Workflow
-=================================
+--------------------------
 
 .. figure:: ../images/framework.png
     :align: center
@@ -28,10 +23,12 @@ Workflow
 The framework has five major components serving different roles. They are *Rollout Manager*, *Training Manager*, *Data Buffer*,
 *Agent Manager* and *Task Scheduler*.
 
-.. _rollout:
+
+Components
+--------------------------------------
 
 Rollout Manager
-===================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``light_malib/rollout/rollout_manager.py``
 
 The Rollout Manager establishes multiple parallel rollout workers and
@@ -40,10 +37,10 @@ settings, policy distributions for simulation, and information pertaining to the
 Episode Server.
 
 
-.. _train:
+
 
 Training Manager
-===================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``light_malib/training/training_manager.py``
 
 The Training Manager sets up multiple distributed trainers and assigns training
@@ -51,10 +48,10 @@ tasks to each trainer. Training task descriptions consist of training configurat
 and details regarding the Policy and Episode buffers.
 
 
-.. _buffer:
+
 
 Data Buffer
-==================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``light_malib/buffer/``
 
 The Data Buffer serves as a repository for episodes and policies. The Episode
@@ -64,20 +61,20 @@ hand, stores updated policies submitted by the Training Manager. Rollout workers
 subsequently fetch these updated policies from the Policy Server for simulation.
 
 
-.. _agent_manager:
+
 
 Agent Manager
-==================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``light_malib/agent/agent_manager.py``
 
 The Agent Manager manages a population of policies and their associated data, which
 includes pairwise match results and individual rankings.
 
 
-.. _scheduler:
+
 
 Task Scheduler
-==================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``light_malib/framework/scheduler/``
 
 The Task Scheduler is responsible for scheduling and assigning tasks to the
@@ -85,10 +82,10 @@ Training Manager and Rollout Manager. In each training generation, it selects an
 based on computed statistics retrieved from the Agent Manager.
 
 
-.. _pbt:
+
 
 Population-based Training Workflow
-====================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Beside training against a fixed opponent, Light-MALib also supports population-based training, such as the Policy-Space Response Oracle (PSRO).
 An illustration of a PSRO trial is given as below:
 

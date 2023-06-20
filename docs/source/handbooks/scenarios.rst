@@ -1,9 +1,11 @@
-.. _scenario:
-
-*********************************************
 Scenarios
-*********************************************
+=====================================
 
+.. contents::
+    :local:
+    :depth: 2
+
+----------------------
 
 Here we include our benchmark GRF multi-agent scenario description
 
@@ -11,12 +13,23 @@ Here we include our benchmark GRF multi-agent scenario description
     :local:
     :depth: 1
 
-The source code for each scenario can be found in ``light_malib/envs/gr_football/scenarios/...``
 
-.. _2v1:
+.. _GRF_intro
+
+GRF intro
+---------------------------
+Google Research Football (GRF) is a football simulator with its dynamics engine implemented in C++ and API in Python. It emulates realistic soccer games
+like FIFA and REAL Football, while allowing algorithms to control all players on the field. It places emphasis on high-level actions rather than low-level controls. GRF allows researchers to
+build their own football scenarios by simply writing a scenario configuration file defining players and ball's position and game rules.
+
+Scenario Description
+---------------------------------
+
+We establish standardized settings for both academy and full-game scenarios in the multi-agent context of Google Research Football and the detailed config files can be found in ``light_malib/envs/gr_football/scenarios/...``
+
 
 Pass and shot with keeper
-==================================
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A 3 vs 2 academy game. Two left-team players start at the right half, competing against one
 right-team defense player and the goalkeeper. The episode terminates when: a. reaches maximum
@@ -54,7 +67,7 @@ duration (400 steps); b. ball is out of bounds; c. one team scores; d. ball owne
 .. _3v1:
 
 3 vs 1 with keeper
-====================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A 4 vs 2 academy game. Three left-team players start at the right half, competing against one
 right-team defense player and the goalkeeper. The same termination condition applies as the pass
@@ -92,7 +105,7 @@ and shoot with keeper scenario.
 .. _corner:
 
 Corner
-====================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 An 11 vs 11 academy game. The left team starts the ball at the right team’s corner. The same
 termination condition applies as the pass and shoot with keeper scenario.
@@ -129,7 +142,7 @@ termination condition applies as the pass and shoot with keeper scenario.
 .. _ct:
 
 Counter attack
-====================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
  An 11 vs 11 academy game. Four left team players start the ball at the mid-field in the right
 team’s half and only two right team players defend in their own half. The rest of the players are
@@ -167,7 +180,7 @@ at the left team’s half. The same termination condition applies as the pass an
 .. _5v5:
 
 5 vs 5 full-game hard
-====================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A 5 vs 5 full-game. Four players from each team gather at the center of the field.
 The left-team starts the kick-off. The game terminates when the episode reaches the
@@ -206,9 +219,9 @@ will swap sides.
 .. _11v11:
 
 11-vs-11 full-game hard
-===================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
- An 11 vs 11 full-game. The left-team starts the kick-off. The game terminates when the episode reaches the maximum duration (3,000 steps).
+An 11 vs 11 full-game. The left-team starts the kick-off. The game terminates when the episode reaches the maximum duration (3,000 steps).
 The second half begins at the 1501st step and two teams will swap sides.
 
 .. figure:: ../images/11v11.svg
