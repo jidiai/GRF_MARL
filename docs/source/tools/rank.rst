@@ -16,7 +16,7 @@ participate the `Competition Evaluation <http://www.jidiai.cn/compete_detail?com
 JIDI Intro
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 JIDI gets its name from a Chinese word **及第 (jí dì)** which refers to *Passing an imperial examination in ancient China*. JIDI aims to address the lack of public
-leaderboards in the field of decision-making by providing **online evaluation** and **ranking** services for a wide range of reinforcement learning environments.
+leaderboards in the field of decision-making AI by providing **online evaluation** and **ranking** services for a wide range of reinforcement learning environments.
 Currently, JIDI supports nearly 100 environments, encompassing both single-agent games like classic-control games in the *gym* framework, as well as multi-agent
 games such as Texas Hold’em and Google Research Football. The online ranking system allows agents to compete against unseen opponents, which is crucial for studying
 generalization ability, an important aspect of algorithm emphasized by many works.
@@ -61,9 +61,74 @@ and is holding the same competition this year:
 #. `CoG 2023 Football AI Competition --- 5-vs-5 full-game Track <http://www.jidiai.cn/compete_detail?compete=35>`_
 #. `CoG 2023 Football AI Competition --- 11-vs-11 full-game Track <http://www.jidiai.cn/compete_detail?compete=36>`_
 
-**Feel free to participant and hope you have fun !** (`participation link <http://www.jidiai.cn/cog_2023/>`_)
+**Feel free to participant and hope you have fun !** (`competition description link <http://www.jidiai.cn/cog_2023/>`_)
 
 
+Tutorial
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+**1. Register an account on JIDI platform**
 
+.. figure:: ../images/jidi_tutorial/step1.png
+    :align: center
+    :width: 400
+    :alt: step1
 
+    Step one: register an account
+
+**2. Fill in the form**
+
+.. figure:: ../images/jidi_tutorial/step2.png
+    :align: center
+    :width: 400
+    :alt: step1
+
+    Step two: fill in the form
+
+**3. Enter the Google Research Football Daily Evaluation page**
+
+.. figure:: ../images/jidi_tutorial/step3.png
+    :align: center
+    :width: 800
+    :alt: step1
+
+    Step three: GRF Daily Evaluation
+
+**4. Upload your agents (1) or view the ranking (2)**
+
+.. figure:: ../images/jidi_tutorial/step4.png
+    :align: center
+    :width: 800
+    :alt: step1
+
+    Step four: submission and ranking
+
+**5. Uploading**
+
+.. figure:: ../images/jidi_tutorial/step5.png
+    :align: center
+    :width: 800
+    :alt: step1
+.. figure:: ../images/jidi_tutorial/step6.png
+    :align: center
+    :width: 800
+    :alt: step1
+
+    Step five: fill in the form
+
+**6. register for the competition**
+
+.. figure:: ../images/jidi_tutorial/step7.png
+    :align: center
+    :width: 800
+    :alt: step1
+.. figure:: ../images/jidi_tutorial/step8.png
+    :align: center
+    :width: 800
+    :alt: step1
+.. figure:: ../images/jidi_tutorial/step9.png
+    :align: center
+    :width: 800
+    :alt: step1
+
+    Step six: register for the competition
