@@ -27,6 +27,7 @@ Documentation: [grf-marl.readthedocs.io/](https://grf-marl.readthedocs.io/)
 - [Framework architecture](#framework-architecture)
 - [Google Reseach Football Toolkit](#google-reseach-football-toolkit)
 - [Pre-trained policies](#pre-trained-policies)
+- [Online Ranking](#online-ranking)
 - [Tensorboard tags explained](#tensorboard-tags-explained)
 - [Contact](#contact)
 
@@ -196,6 +197,12 @@ At this stage, we release some of our trained model for use as initializations o
 <img src='docs/source/images/radar_11v11.svg' width='400px'>
 
 [Return to Contents](#contents)
+
+----
+
+## Online Ranking
+
+See [documentation](https://grf-marl.readthedocs.io/).
 
 ----
 

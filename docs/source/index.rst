@@ -38,4 +38,5 @@ A Google Research Football Multi-Agent Reinforcement Learning Library (GRF MARLL
 
    tools/pretrain
    tools/tool
+   tools/rank
 
