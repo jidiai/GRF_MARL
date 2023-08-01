@@ -91,29 +91,8 @@ class Player(player_base.PlayerBase):
         policy_input = to_tensor(policy_input, device=self.device)
         rets = self._policy.compute_action(**policy_input,explore=False)
 
-        actions = rets[EpisodeKey.ACTION]
+        actions = rets[EpisodeKey.ACTION].numpy()
 
-        # EPS = self._stats_calculator.effective_playing_space(observations[0])
-        # lpW = self._stats_calculator.PlpW(observations[0])
-        # TS = self._stats_calculator.team_separateness(observations[0])
-        # wc = self._stats_calculator.team_centroid(observations[0])
-
-        # if observations[0]['steps_left'] == 2:
-            # plt.plot(self._stats_calculator.EPS_list, label = 'EPS')
-            # plt.plot(self._stats_calculator.oppo_EPS_list, label='Bot EPS')
-            # plt.axhline(y=0.195, color='r',label='initial EPS')
-            # plt.axhline(y=1.776, color='grey', label='Max possible EPS')
-            # plt.plot(self._stats_calculator.lpw_list, label = 'LpW')
-            # plt.plot(self._stats_calculator.oppo_lpw_list, label='oppo LpW')
-            # plt.axhline(y=self._stats_calculator.lpw_list[0], color='r')
-            # plt.plot(self._stats_calculator.TS_list, label = 'TS')
-            # plt.plot(self._stats_calculator.oppo_TS_list, label='Oppo TS')
-            # plt.axhline(y=self._stats_calculator.TS_list[0], color='r')
-            # plt.plot(self._stats_calculator.weighted_cen_list, label='weighted centroid x')
-            # plt.plot(self._stats_calculator.oppo_weighted_cen_list, label='oppo weighted centroid x')
-
-            # plt.legend()
-            # plt.show()
 
         return actions
 
@@ -132,7 +111,7 @@ def load_model(load_path,device="cpu"):
         env_agent_id = 'team_1'
     )
     actor = torch.load(os.path.join(load_path, "actor.pt"), device)
-    hard_update(res._actor, actor)
+    hard_update(res.actor, actor)
     return res
 
 

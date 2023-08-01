@@ -22,7 +22,7 @@ export PYTHONPATH=$base_dir
 
 start=`date +%s`
 
-ai_path='light_malib/trained_models/gr_football/11_vs_11/current_best'
+ai_path='light_malib/trained_models/gr_football/11_vs_11/flank_pass'
 ai_path2='light_malib/trained_models/gr_football/11_vs_11/defensive_passer'
 
 ai_path="$base_dir/$ai_path"
