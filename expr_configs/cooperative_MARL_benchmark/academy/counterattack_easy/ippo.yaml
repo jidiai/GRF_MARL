@@ -1,5 +1,5 @@
 expr_group: gr_football
-expr_name: benchmark_academy_counterattack_mappo
+expr_name: benchmark_academy_counterattack_easy_ippo
 log_dir: ./logs             #log directory
 seed: 0
 eval_only: False            #True if only want evaluation
@@ -96,7 +96,7 @@ rollout_manager:
       - cls: "gr_football"
         id_prefix: "gr_footbal"
         scenario_config:
-          env_name: "benchmark_academy_counterattack_hard"
+          env_name: "benchmark_academy_counterattack_easy"
           number_of_left_players_agent_controls: 10
           number_of_right_players_agent_controls: 1
           representation: "raw"
@@ -179,7 +179,7 @@ populations:
     algorithm:
       name: "MAPPO"
       model_config:
-        model: "gr_football.basic_centralized_critic_pool_obs"       # model type
+        model: "gr_football.basic"       # model type
         initialization:
           use_orthogonal: True
           gain: 1.
@@ -210,10 +210,6 @@ populations:
       custom_config:
         FE_cfg:
           num_players: 22    #config sent to the Feature Encoder
-        sub_algorithm_name: MAPPO
-        num_agents: 10
-        other_clip_param: 0.125
-
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False
@@ -239,6 +235,8 @@ populations:
         entropy_coef: 0.00
         clip_param: 0.2
         # kl_early_stop: 0.01
+
+        use_modified_mappo: False
 
       policy_init_cfg:
         agent_0: # agent_id

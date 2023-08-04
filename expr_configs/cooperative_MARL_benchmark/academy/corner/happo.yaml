@@ -210,6 +210,10 @@ populations:
       custom_config:
         FE_cfg:
           num_players: 22    #config sent to the Feature Encoder
+        sub_algorithm_name: HAPPO
+        num_agents: 10
+        other_clip_param: 0.125
+
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False

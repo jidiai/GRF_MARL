@@ -210,6 +210,10 @@ populations:
       custom_config:
         FE_cfg:
           num_players: 22    #config sent to the Feature Encoder
+        sub_algorithm_name: MAPPO
+        num_agents: 10
+        other_clip_param: 0.125
+
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False
@@ -235,8 +239,6 @@ populations:
         entropy_coef: 0.00
         clip_param: 0.2
         # kl_early_stop: 0.01
-
-        use_modified_mappo: False
 
       policy_init_cfg:
         agent_0: # agent_id

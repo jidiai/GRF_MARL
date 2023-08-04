@@ -210,13 +210,17 @@ populations:
       custom_config:
         FE_cfg:
           num_players: 22    #config sent to the Feature Encoder
+        sub_algorithm_name: A2PO
+        num_agents: 10
+        other_clip_param: 0.125
+
         gamma: 0.995
         use_cuda: False  # enable cuda or not
         use_q_head: False
         ppo_epoch: 5
         num_mini_batch: 1  # the number of mini-batches
         
-        return_mode: new_gae
+        return_mode: new_gae_trace
         gae:
           gae_lambda: 0.95
         vtrace:
