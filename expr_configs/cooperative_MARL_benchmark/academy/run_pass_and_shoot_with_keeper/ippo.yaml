@@ -1,5 +1,5 @@
 expr_group: gr_football
-expr_name: benchmark_academy_pass_and_shot_with_keeper_a2po
+expr_name: benchmark_academy_run_pass_and_shot_with_keeper_ippo
 log_dir: ./logs             #log directory
 seed: 0
 eval_only: False            #True if only want evaluation
@@ -96,7 +96,7 @@ rollout_manager:
       - cls: "gr_football"
         id_prefix: "gr_footbal"
         scenario_config:
-          env_name: "benchmark_academy_pass_and_shoot_with_keeper"
+          env_name: "benchmark_academy_run_pass_and_shoot_with_keeper"
           number_of_left_players_agent_controls: 2
           number_of_right_players_agent_controls: 1
           representation: "raw"
@@ -179,7 +179,7 @@ populations:
     algorithm:
       name: "MAPPO"
       model_config:
-        model: "gr_football.basic_centralized_critic_pool_obs"       # model type
+        model: "gr_football.basic"       # model type
         initialization:
           use_orthogonal: True
           gain: 1.
@@ -209,18 +209,14 @@ populations:
       # set hyper parameter
       custom_config:
         FE_cfg:          # config sent to the Feature Encoder
-          num_players: 5   # total number of players on the pitch
-        sub_algorithm_name: A2PO
-        num_agents: 2
-        other_clip_param: 0.125
-
+          num_players: 5   # total number of players on the pitch  
         gamma: 0.99
         use_cuda: False  # enable cuda or not
         use_q_head: False
-        ppo_epoch: 1
+        ppo_epoch: 10
         num_mini_batch: 1  # the number of mini-batches
         
-        return_mode: new_gae_trace
+        return_mode: new_gae
         gae:
           gae_lambda: 0.95
         vtrace:
@@ -240,6 +236,7 @@ populations:
         clip_param: 0.2
         # kl_early_stop: 0.01
 
+        use_modified_mappo: False
 
       policy_init_cfg:
         agent_0: # agent_id

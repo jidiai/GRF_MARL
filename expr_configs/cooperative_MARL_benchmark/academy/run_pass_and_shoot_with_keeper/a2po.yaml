@@ -1,5 +1,5 @@
 expr_group: gr_football
-expr_name: benchmark_academy_pass_and_shot_with_keeper_a2po
+expr_name: benchmark_academy_run_pass_and_shot_with_keeper_a2po
 log_dir: ./logs             #log directory
 seed: 0
 eval_only: False            #True if only want evaluation
@@ -96,7 +96,7 @@ rollout_manager:
       - cls: "gr_football"
         id_prefix: "gr_footbal"
         scenario_config:
-          env_name: "benchmark_academy_pass_and_shoot_with_keeper"
+          env_name: "benchmark_academy_run_pass_and_shoot_with_keeper"
           number_of_left_players_agent_controls: 2
           number_of_right_players_agent_controls: 1
           representation: "raw"
@@ -217,7 +217,7 @@ populations:
         gamma: 0.99
         use_cuda: False  # enable cuda or not
         use_q_head: False
-        ppo_epoch: 1
+        ppo_epoch: 5
         num_mini_batch: 1  # the number of mini-batches
         
         return_mode: new_gae_trace
