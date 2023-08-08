@@ -249,7 +249,9 @@ class MAPPOLoss(LossFunc):
                 each_agent_imp_weights = each_agent_imp_weights.detach()
                 
                 mask_self = torch.eye(self._num_agents,device=each_agent_imp_weights.device,dtype=torch.bool)
-                mask_self = mask_self[agent_ids]
+
+                if self.sub_algorithm_name != 'CoPPO':
+                    mask_self = mask_self[agent_ids]
                 
                 # (#selected_agents,#agents,1)
                 mask_self = mask_self.unsqueeze(-1)
