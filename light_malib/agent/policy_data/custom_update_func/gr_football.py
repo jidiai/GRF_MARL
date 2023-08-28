@@ -39,12 +39,15 @@ def update_func(policy_data_manager, eval_results, **kwargs):
                 policy_data_manager.data[key][idx_0, idx_1] = 0
                 policy_data_manager.data[key][idx_1, idx_0] = 0
 
-        for key in ["score", "win", "lose", "my_goal", "goal_diff"]:
+        for key in ["score", "lose", "my_goal", "goal_diff"]:
             policy_data_manager.data[key][idx_0, idx_1] += results_0[key] / 2
             policy_data_manager.data[key][idx_1, idx_0] += results_1[key] / 2
             if key == "score":
                 policy_data_manager.data["payoff"][idx_0, idx_1] += results_0[key] - 0.5
                 policy_data_manager.data["payoff"][idx_1, idx_0] += results_1[key] - 0.5
+        for key in ['win']:
+            policy_data_manager.data[key][idx_0, idx_1] += results_0[key]
+            policy_data_manager.data[key][idx_1, idx_0] += results_1[key]
 
     # print data
     Logger.info(
@@ -92,9 +95,14 @@ def update_func(policy_data_manager, eval_results, **kwargs):
         ray.get(monitor.add_scalar.remote("PSRO/Elo", elo[-1][1], int(elo[-1][0][-1])))
 
     if elo is not None:
-        dump_path = os.path.join(dump_path, "elo.pkl")
-        with open(dump_path, "wb") as f:
+        _dump_path = os.path.join(dump_path, "elo.pkl")
+        with open(_dump_path, "wb") as f:
             pickle.dump(elo, f)
+
+    winrate = policy_data_manager.get_matrix_data("win")
+    _dump_path = os.path.join(dump_path, "win.pkl")
+    with open(_dump_path, "wb") as f:
+        pickle.dump(winrate, f)
 
     payoff_matrix = payoff_matrix[-last_k:, -last_k:]
     table = pformat_table(
