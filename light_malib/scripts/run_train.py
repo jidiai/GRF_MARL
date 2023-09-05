@@ -35,12 +35,12 @@ parser = argparse.ArgumentParser(
     description="play google research football competition"
 )
 parser.add_argument(
-    "--config", type=str, default="light_malib/expr/bc/expr_full_game_4_vs_4_bc.yaml"
+    "--config", type=str, default="expr_configs/cooperative_MARL_benchmark/full_game/5_vs_5_hard/ippo.yaml"
 )
 parser.add_argument(
     "--model_0",
     type=str,
-    default="logs/gr_football/academy_3_vs_1_with_keeper/2023-04-03-02-01-10/agent_0/agent_0-default-1/epoch_83000",
+    default="",
 )
 parser.add_argument(
     "--model_1",
@@ -61,13 +61,11 @@ cfg["rollout_manager"]["worker"]["envs"][0]["scenario_config"]["render"] = args.
 policy_id_0 = "policy_0"
 policy_id_1 = "policy_1"
 
-# from light_malib.registry.registration import QMix
-# policy_0 = QMix('QMix', None, None, cfg.populations[0].algorithm.model_config, cfg.populations[0].algorithm.custom_config)
 from light_malib.registry.registration import QMix, MAPPO, BC
 # policy_0 = QMix('QMix', None, None, cfg.populations[0].algorithm.model_config, cfg.populations[0].algorithm.custom_config)
-# policy_0 = MAPPO('MAPPO', None, None, cfg.populations[0].algorithm.model_config, cfg.populations[0].algorithm.custom_config,
-#                  env_agent_id='agent_0')
-policy_0 = BC("BC", None, None, cfg.populations[0].algorithm.model_config, cfg.populations[0].algorithm.custom_config)
+policy_0 = MAPPO('MAPPO', None, None, cfg.populations[0].algorithm.model_config, cfg.populations[0].algorithm.custom_config,
+                 env_agent_id='agent_0')
+# policy_0 = BC("BC", None, None, cfg.populations[0].algorithm.model_config, cfg.populations[0].algorithm.custom_config)
 
 # policy_0 = MAPPO.load(model_path_0, env_agent_id="agent_0")
 policy_1 = MAPPO.load(model_path_1, env_agent_id="agent_1")
@@ -86,10 +84,10 @@ datasever.create_table(table_name)
 
 # from light_malib.algorithm.qmix.trainer import QMixTrainer
 # trainer = QMixTrainer('trainer_1')
-# from light_malib.algorithm.mappo.trainer import MAPPOTrainer
-# trainer = MAPPOTrainer('trainer_1')
-from light_malib.registry.registration import BCTrainer
-trainer = BCTrainer('trainer_1')
+from light_malib.algorithm.mappo.trainer import MAPPOTrainer
+trainer = MAPPOTrainer('trainer_1')
+# from light_malib.registry.registration import BCTrainer
+# trainer = BCTrainer('trainer_1')
 
 total_run = args.total_run
 total_win = 0
@@ -180,9 +178,8 @@ class trainer_cfg:
 #                                   local_queue_size=cfg.training_manager.local_queue_size,
 #                                   policy_server)]
 
-
+# training
 policy_0 = policy_0.to_device('cuda:0')
-
 trainer.reset(policy_0, cfg.training_manager.trainer)
 trainer.optimize(stack_samples)
 
