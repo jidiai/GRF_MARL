@@ -17,6 +17,8 @@ This repo provides a simple, distributed and asynchronous multi-agent reinforcem
 
 Documentation: [grf-marl.readthedocs.io/](https://grf-marl.readthedocs.io/)
 
+Implementation for CDS_QMIX and CDS_QPLEX: [MyCDS benchmark](https://github.com/DiligentPanda/MyCDS/tree/benchmark)
+
 ----
 
 ## Contents
