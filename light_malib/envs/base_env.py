@@ -22,7 +22,7 @@ class BaseEnv:
     def reset(self):
         pass
 
-    def step(self):
+    def step(self, actions):
         pass
 
     def get_episode_stats(self):

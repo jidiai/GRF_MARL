@@ -27,8 +27,12 @@ from light_malib.algorithm.bc.policy import BC
 from light_malib.algorithm.bc.loss import BCLoss
 from light_malib.algorithm.bc.trainer import BCTrainer
 
+from light_malib.algorithm.q_learning.loss import QLearningLoss
+from light_malib.algorithm.q_learning.trainer import QLearningTrainer
+from light_malib.algorithm.q_learning.policy import QLearning
 
 from light_malib.envs.gr_football.env import GRFootballEnv
+from light_malib.envs.kuhn_poker.env import KuhnPokerEnv
 
 from light_malib.framework.scheduler.stopper.common.win_rate_stopper import (
     WinRateStopper,
