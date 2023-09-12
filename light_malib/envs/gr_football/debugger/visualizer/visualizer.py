@@ -376,7 +376,7 @@ class Visualizer:
 
         # set the position of the window to the center of the screen
         self.root.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
-        self.root.state("zoomed")
+        self.root.state("normal")
 
         style = ttk.Style()
         style.theme_use("clam")

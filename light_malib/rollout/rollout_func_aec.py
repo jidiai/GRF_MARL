@@ -80,10 +80,11 @@ def rollout_func(
     """
     if not eval:
         assert data_server is not None
-        # padding_length=kwargs.get("padding_length",None)
+        padding_length=kwargs.get("padding_length",None)
         # assert padding_length is not None
     render=kwargs.get("render",False)
     rollout_epoch=kwargs.get("rollout_epoch",0)
+    episode_mode = kwargs.get('episode_mode', None)
 
     main_agent_id=rollout_desc.agent_id
     assert main_agent_id in behavior_policies
@@ -168,46 +169,57 @@ def rollout_func(
                 # append new data
                 step_data_list.append(step_data[main_agent_id])
                 # NOTE(jh): we need the next reward and done to compute return. Force them to be None here.
-                step_data_list[-1][EpisodeKey.REWARD]=None
-                step_data_list[-1][EpisodeKey.DONE]=None    
+                # step_data_list[-1][EpisodeKey.REWARD]=None
+                # step_data_list[-1][EpisodeKey.DONE]=None
 
         # update rnn states
         rnn_states=union(rnn_states,select_fields(policy_outputs,[EpisodeKey.ACTOR_RNN_STATE,EpisodeKey.CRITIC_RNN_STATE]))
     
     if not eval:
-        # bootstrap_data=select_fields(
-        #     {main_agent_id:step_data_list[-1]},
-        #     [EpisodeKey.CUR_OBS,EpisodeKey.DONE,EpisodeKey.CRITIC_RNN_STATE,EpisodeKey.CUR_STATE]
-        # )
-        # bootstrap_data=bootstrap_data[main_agent_id]
-        #episode=stack_step_data(step_data_list,bootstrap_data,padding_length=padding_length)
-        # step_data_list.append(bootstrap_data)
-        episode=step_data_list
-        
-        # if submit episodes.
-        # data_server.save.remote(default_table_name(rollout_desc.agent_id,rollout_desc.policy_id,rollout_desc.share_policies),[episode])
-        
-        # elif submit transitions. NOTE(jh): frame stacking is not supported
-        transitions=[]
-        for step in range(len(episode)-1):
-            # we need a newaxis to indicate length of step 1
-            transition={
-                EpisodeKey.CUR_OBS: episode[step][EpisodeKey.CUR_OBS][np.newaxis,...],
-                EpisodeKey.ACTION_MASK: episode[step][EpisodeKey.ACTION_MASK][np.newaxis,...], 
-                EpisodeKey.ACTION: episode[step][EpisodeKey.ACTION][np.newaxis,...],
-                EpisodeKey.REWARD: episode[step][EpisodeKey.REWARD][np.newaxis,...],
-                EpisodeKey.DONE: episode[step][EpisodeKey.DONE][np.newaxis,...],
-                EpisodeKey.NEXT_OBS: episode[step+1][EpisodeKey.CUR_OBS][np.newaxis,...],
-                EpisodeKey.NEXT_ACTION_MASK: episode[step+1][EpisodeKey.ACTION_MASK][np.newaxis,...]
-            }
-            transitions.append(transition)
-        if hasattr(data_server.save, 'remote'):
-            data_server.save.remote(default_table_name(rollout_desc.agent_id,rollout_desc.policy_id,rollout_desc.share_policies),transitions)
-        else:
-            data_server.save(default_table_name(rollout_desc.agent_id,rollout_desc.policy_id,rollout_desc.share_policies),transitions)
+        if episode_mode == 'traj':
+            bootstrap_data=select_fields(
+                {main_agent_id:step_data_list[-1]},
+                [EpisodeKey.CUR_OBS,EpisodeKey.DONE,EpisodeKey.CRITIC_RNN_STATE,EpisodeKey.CUR_STATE]
+            )
+            bootstrap_data=bootstrap_data[main_agent_id]
+            episode=stack_step_data(step_data_list,bootstrap_data,padding_length=padding_length)
+            if hasattr(data_server.save, "remote"):
+                data_server.save.remote(
+                    default_table_name(rollout_desc.agent_id, rollout_desc.policy_id, rollout_desc.share_policies),
+                    [episode])
+            else:
+                data_server.save(
+                    default_table_name(rollout_desc.agent_id, rollout_desc.policy_id, rollout_desc.share_policies),
+                    [episode])
+            # step_data_list.append(bootstrap_data)
+        elif episode_mode == 'time-step':
+
+            episode=step_data_list
+
+            # if submit episodes.
+            # data_server.save.remote(default_table_name(rollout_desc.agent_id,rollout_desc.policy_id,rollout_desc.share_policies),[episode])
+
+            # elif submit transitions. NOTE(jh): frame stacking is not supported
+            transitions=[]
+            for step in range(len(episode)-1):
+                # we need a newaxis to indicate length of step 1
+                transition={
+                    EpisodeKey.CUR_OBS: episode[step][EpisodeKey.CUR_OBS][np.newaxis,...],
+                    EpisodeKey.ACTION_MASK: episode[step][EpisodeKey.ACTION_MASK][np.newaxis,...],
+                    EpisodeKey.ACTION: episode[step][EpisodeKey.ACTION][np.newaxis,...],
+                    EpisodeKey.REWARD: episode[step][EpisodeKey.REWARD][np.newaxis,...],
+                    EpisodeKey.DONE: episode[step][EpisodeKey.DONE][np.newaxis,...],
+                    EpisodeKey.NEXT_OBS: episode[step+1][EpisodeKey.CUR_OBS][np.newaxis,...],
+                    EpisodeKey.NEXT_ACTION_MASK: episode[step+1][EpisodeKey.ACTION_MASK][np.newaxis,...]
+                }
+                transitions.append(transition)
+            if hasattr(data_server.save, 'remote'):
+                data_server.save.remote(default_table_name(rollout_desc.agent_id,rollout_desc.policy_id,rollout_desc.share_policies),transitions)
+            else:
+                data_server.save(default_table_name(rollout_desc.agent_id,rollout_desc.policy_id,rollout_desc.share_policies),transitions)
 
 
 
     stats=env.get_episode_stats()
-        
-    return {"main_agent_id":main_agent_id, 'policy_ids': policy_ids, "stats": stats}
+    results = {"main_agent_id":main_agent_id, 'policy_ids': policy_ids, "stats": stats}
+    return {'results': [results]}

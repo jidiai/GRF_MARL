@@ -11,6 +11,9 @@ from light_malib.buffer.data_server import DataServer
 from light_malib.utils.naming import default_table_name
 from light_malib.algorithm.q_learning.trainer import QLearningTrainer
 
+from light_malib.registry.registration import MAPPO
+from light_malib.registry.registration import MAPPOTrainer
+
 import os
 import pathlib
 BASE_DIR = str(pathlib.Path(__file__).resolve().parent.parent.parent)
@@ -69,18 +72,18 @@ class HumanPlayer:
             EpisodeKey.ACTOR_RNN_STATE: kwargs[EpisodeKey.ACTOR_RNN_STATE]
         }
 
-cfg_path='expr_configs/poker/expr_q_learning_psro.yaml'
+cfg_path= 'expr_configs/poker/expr_ppo_psro.yaml' #'expr_configs/poker/expr_q_learning_psro.yaml'
 cfg = load_cfg(os.path.join(BASE_DIR, cfg_path))
 
 policy_id_0 = "policy_0"
 policy_id_1 = "policy_1"
 
-policy_0 = QLearning('QLearning', None, None, cfg.populations[0].algorithm.model_config,
+policy_0 = MAPPO('ppo', None, None, cfg.populations[0].algorithm.model_config,
                      cfg.populations[0].algorithm.custom_config,)
-policy_1 = QLearning('QLearning', None, None, cfg.populations[0].algorithm.model_config,
+policy_1 = MAPPO('ppo', None, None, cfg.populations[0].algorithm.model_config,
                      cfg.populations[0].algorithm.custom_config,)
 
-trainer = QLearningTrainer('trainer1')
+trainer = MAPPOTrainer('trainer1')
 
 rollout_desc = RolloutDesc("agent_0", None, None, None, None, None)
 behavior_policies = {
@@ -107,8 +110,9 @@ for i in range(2):
         env=env,
         behavior_policies=behavior_policies,
         data_server=datasever,
-        padding_length=42,
-        render=True
+        padding_length=10,
+        render=True,
+        episode_mode='traj'
     )
 
 data_list = []

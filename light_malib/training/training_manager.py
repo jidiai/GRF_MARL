@@ -105,7 +105,9 @@ class TrainingManager:
 
         if self.cfg.gpu_preload:
             ray.get([trainer.local_queue_init.remote() for trainer in self.trainers])
-        
+
+        # rollout_task_ref = self.rollout_manger.rollout.remote(self.rollout_desc)
+
         self.training_loop=self.get_traininig_loop()
         
         # start rollout task

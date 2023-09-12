@@ -1,8 +1,8 @@
-expr_group: gr_football
-expr_name: full_game_5_vs_5_hard_ippo
-log_dir: ./logs             # log directory
+expr_group: kuhn_poker
+expr_name: test_ppo
+log_dir: logs             #log directory
 seed: 0
-eval_only: False            # True if only want evaluation
+eval_only: False            #True if only want evaluation
 
 distributed:
   use: False
@@ -15,45 +15,49 @@ distributed:
       - ip:
 
 framework:
-  name: "psro"                # framework name
-  max_rounds: 1         # psro rounds
-  meta_solver: "nash"         # 'nash', 'uniform', 'pfsp'
-  sync_training: True        # TODO[jh]: on_policy, sync_off_policy, async_off_policy
+  name: "psro"                #framework name
+  max_rounds: 50         #psro rounds
+  meta_solver: "nash"         #'nash', 'uniform', 'pfsp'
+  sync_training: True
+  on_policy: True
   stopper:
-    type: "win_rate_stopper"
+    type: "poker_oracle_exploitablitiy_stopper"
     kwargs:
-      min_win_rate: 1.1
-      max_steps: 700          #iteration at each psro round
+      min_reward_thresh_percent: 0.95
+      # min_win_rate: 0.9
+      max_steps: 400
+
 
 agent_manager:
   num_agents: 2
-  share_policies: False
+  share_policies: True
 
 evaluation_manager:
-  num_eval_rollouts: 1
+  num_eval_rollouts: 30
 
 policy_data_manager:
-  update_func: "gr_football" 
+  update_func: "kuhn_poker"
   fields:
     payoff:
       type: "matrix"
-      missing_value: -100 
+      missing_value: -100
     score:
       type: "matrix"
-      missing_value: -100 
+      missing_value: -100
     win:
       type: "matrix"
-      missing_value: -100 
+      missing_value: -100
     lose:
       type: "matrix"
-      missing_value: -100 
-    my_goal:
+      missing_value: -100
+    reward:
       type: "matrix"
-      missing_value: -100 
-    goal_diff:
-      type: "matrix"
-      missing_value: -100 
-        
+      missing_value: -100
+    exploitability:
+      type: "array"
+      missing_value: -100
+
+
 monitor:
   type: "local"   #'remote': wandb or 'local': tensorboard
   distributed:
@@ -62,18 +66,24 @@ monitor:
       resources:
         - ["node:${distributed.nodes.master.ip}",0.01]
 
+league:
+  role: "client"
+  server_ip: ""
+  server_port: ""
+
 rollout_manager:
   distributed:
     resources:
       num_cpus: 1
       resources:
         - ["node:${distributed.nodes.master.ip}",0.01]
-  num_workers: 80     # numbers of parallel rollout worker, one env per worker by default
+  num_workers: 5
   seed: 12345
-  saving_interval: 100 # the frequency of dumping model's weight
+  saving_interval: 100 # the sequence of dump model's weight
   batch_size: ${rollout_manager.num_workers}
   eval_batch_size: 100
-  eval_freq: 100 # epochs
+  eval_freq: 10 # epochs
+  min_samples: ${training_manager.batch_size}
   rollout_metric_cfgs:
     reward:
       type: "sliding"
@@ -87,36 +97,16 @@ rollout_manager:
     distributed:
       resources:
         num_cpus: 1
-    rollout_length: 3001                                    # episode length
+    rollout_length: 3001
     eval_rollout_length: 3001
-    sample_length: 0                                     # every $sample_length traj will be push to buffer during rollout
+    sample_length: 1000
     padding_length: # of not use in gr_football
-    rollout_func_name: "rollout_func"
-    episode_mode: 'traj'                                    # traj or time-step
-    envs:
-      - cls: "gr_football"
-        id_prefix: "gr_footbal"
-        scenario_config:
-          env_name: "benchmark_full_game_5_vs_5_hard"
-          number_of_left_players_agent_controls: 4
-          number_of_right_players_agent_controls: 1
-          representation: "raw"
-          rewards: "scoring,checkpoints"
-          stacked: False
-          logdir: '/tmp/football/malib_psro'
-          write_goal_dumps: False
-          write_full_episode_dumps: False
-          render: False
-          other_config_options:
-            action_set: v2  #default/v2, v2 is only used for built-in AI
-        reward_config:
-          goal_reward: 0
-          official_reward: 1
+    rollout_func_name: "rollout_func_aec"
+    episode_mode: 'traj'
     credit_reassign:
-    decaying_exploration:
-      init_noise: 0             #random exploration noise level
-      total_epoch_to_zero: 2000    #number of epoch when exploration noise decay to zero
-      interval: 400                #number of epoch at each fixed exploration noise level
+    envs:
+      - cls: "kuhn_poker"
+        id_prefix: "kuhn_poker"
 
 training_manager:
   distributed:
@@ -128,7 +118,7 @@ training_manager:
   master_addr: "127.0.0.1"
   master_port:  "12774"
   local_queue_size: 1
-  batch_size: ${rollout_manager.batch_size} # how many data sample from DatasetServer per time.
+  batch_size: ${rollout_manager.num_workers} # how many data sample from DatasetServer per time.
   num_prefetchers: 1
   data_prefetcher:
     distributed:
@@ -180,7 +170,7 @@ populations:
     algorithm:
       name: "MAPPO"
       model_config:
-        model: "gr_football.basic"       # model type
+        model: "kuhn_poker.ppo"       # model type
         initialization:
           use_orthogonal: True
           gain: 1.
@@ -211,13 +201,13 @@ populations:
       custom_config:
         FE_cfg:
           num_players: 10    #config sent to the Feature Encoder
-        gamma: 0.995
+        gamma: 0.99
         use_cuda: False  # enable cuda or not
         use_q_head: False
-        ppo_epoch: 20
+        ppo_epoch: 5
         num_mini_batch: 1  # the number of mini-batches
         
-        return_mode: new_gae
+        return_mode: mc
         gae:
           gae_lambda: 0.95
         vtrace:
@@ -247,13 +237,8 @@ populations:
               strategy: random # now support pretrained, inherit_last, random
               policy_id: 
               policy_dir:
-          initial_policies:
-
-        agent_1:
-          new_policy_ctr_start: -1
-          init_cfg:
-            - condition: "==0" # condition if True in order
-              strategy: pretrained # now support pretrained, inherit_last, random
-              policy_id: built_in
-              policy_dir: light_malib/trained_models/gr_football/5_vs_5/built_in
+            - condition: "default" # default case.
+              strategy: random # now support pretrained, inherit_last, random
+              policy_id:
+              policy_dir:
           initial_policies:                         #initial population

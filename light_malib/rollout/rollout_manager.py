@@ -68,6 +68,8 @@ class RolloutManager:
 
         self.eval_freq = self.cfg.eval_freq
 
+        self.min_samples = self.cfg.get("min_samples", None)
+
         self.rollout_epoch = 0
         self.rollout_epoch_lock = threading.Lock()
         Logger.info("{} initialized".format(self.id))
@@ -160,7 +162,7 @@ class RolloutManager:
                     rollout_epoch=rollout_epoch,
                 )
                 results, timer_results = self.reduce_rollout_results(rollout_results)
-                
+
                 global_timer.time("batch_start", "batch_end", "batch")
                 timer_results.update(global_timer.elapses)
                 global_timer.clear()
@@ -192,7 +194,7 @@ class RolloutManager:
                         )
                     )
                     self.log_to_tensorboard(results,timer_results,rollout_epoch=rollout_epoch,main_tag="RolloutEval")
-                
+
                 # TODO(jh): currently eval is not supported in async, so we use rollout stats instead
                 self.rollout_metrics.update(results)
                 # save best stable model
@@ -208,8 +210,12 @@ class RolloutManager:
                     best_reward = reward
                     self.push_best_model_to_policy_server(rollout_epoch)
 
-                # training step: update the model    
-                ray.get(self.traning_manager.train_step.remote())
+                # training step: update the model
+                if self.min_samples is not None and self.rollout_epoch*self.batch_size>=self.min_samples:
+                    ray.get(self.traning_manager.train_step.remote())
+
+
+                # breakpoint()
                 
         except Exception as e:
             # save model

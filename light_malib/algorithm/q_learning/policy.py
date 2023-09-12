@@ -10,6 +10,7 @@ from torch import nn
 from light_malib.utils.logger import Logger
 from light_malib.utils.typing import DataTransferType, Tuple, Any, Dict, EpisodeID, List
 from light_malib.utils.episode import EpisodeKey
+from light_malib.algorithm.common.policy import Policy
 
 import wrapt
 import tree
@@ -66,7 +67,7 @@ def shape_adjusting(wrapped, instance, args, kwargs):
     return recover_rets
 
 @registry.registered(registry.POLICY)
-class QLearning(nn.Module):
+class QLearning(Policy):
     def __init__(
         self,
         registered_name: str,                   
@@ -76,22 +77,30 @@ class QLearning(nn.Module):
         custom_config: Dict[str, Any] = None,
         **kwargs,
     ):
-        del observation_space
-        del action_space
         
         self.registered_name=registered_name
         assert self.registered_name=="QLearning"
         self.model_config=model_config
         self.custom_config=custom_config
-        
-        super().__init__()
+
        
         model_type = model_config["model"]
         Logger.warning("use model type: {}".format(model_type))
         model=importlib.import_module("light_malib.model.{}".format(model_type)) 
         
         self.encoder=model.Encoder()
-        
+        self.share_backbone = hasattr(model, "Backbone")
+        observation_space = self.encoder.observation_space
+        action_space = self.encoder.action_space
+        super().__init__(registered_name=registered_name,
+            observation_space=observation_space,
+            action_space=action_space,
+            model_config=model_config,
+            custom_config=custom_config,)
+
+        del observation_space
+        del action_space
+
         # TODO(jh): extension to multi-agent cooperative case
         # self.env_agent_id = kwargs["env_agent_id"]
         # self.global_observation_space=self.encoder.global_observation_space if hasattr(self.encoder,"global_observation_space") else self.encoder.observation_space
@@ -161,7 +170,9 @@ class QLearning(nn.Module):
 
     def to_device(self, device):
         self_copy = copy.deepcopy(self)
-        self_copy.to(device)
+        # self_copy.to(device)
+        self_copy.actor = self_copy.actor.to(device)
+        self_copy.critic = self_copy.critic.to(device)
         self_copy.device = device
         return self_copy
 
@@ -239,3 +250,11 @@ class QLearning(nn.Module):
             critic_state_dict = torch.load(os.path.join(dump_dir, "critic_state_dict.pt"), policy.device)
             policy.critic.load_state_dict(critic_state_dict)
         return policy
+
+    def eval(self):
+        self.actor.eval()
+        self.critic.eval()
+
+    def train(self):
+        self.actor.train()
+        self.critic.train()

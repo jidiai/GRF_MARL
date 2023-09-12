@@ -1,6 +1,6 @@
-expr_group: kuhn_poker
-expr_name: test_q_learning
-log_dir: /root/expr/log
+expr_group: leduc_poker
+expr_name: test_dqns
+log_dir: logs
 seed: 0
 eval_only: False
 
@@ -16,25 +16,26 @@ distributed:
 
 framework:
   name: "psro"
-  max_generations: 50
+  max_rounds: 50
   meta_solver: "nash"
   sync_training: True
+  on_policy: False
   stopper:
     type: "poker_oracle_exploitablitiy_stopper"
     kwargs:
       min_reward_thresh_percent: 0.95
       # min_win_rate: 0.9
-      max_steps: 1000
+      max_steps: 400
 
 agent_manager:
   num_agents: 2
   share_policies: True
 
 evaluation_manager:
-  num_eval_rollouts: 100
+  num_eval_rollouts: 30
 
 policy_data_manager:
-  update_func: "kuhn_poker" 
+  update_func: "leduc_poker" 
   fields:
     payoff:
       type: "matrix"
@@ -74,7 +75,7 @@ rollout_manager:
       num_cpus: 1
       resources:
         - ["node:${distributed.nodes.master.ip}",0.01]
-  num_workers: 10
+  num_workers: 5
   seed: 12345
   saving_interval: 100 # the sequence of dump model's weight
   batch_size: ${rollout_manager.num_workers}
@@ -99,9 +100,11 @@ rollout_manager:
     sample_length: 1000
     padding_length: # of not use in gr_football
     rollout_func_name: "rollout_func_aec"
+    episode_mode: 'time-step'
+    credit_reassign:
     envs:
-      - cls: "kuhn_poker"
-        id_prefix: "kuhn_poker"
+      - cls: "leduc_poker"
+        id_prefix: "leduc_poker"
 
 training_manager:
   distributed:
@@ -147,10 +150,10 @@ data_server:
   table_cfg:
     capacity: 10000
     sampler_type: "uniform"
-    sample_max_usage: 1000
+    sample_max_usage: 1000 # this might also be problematic when sync training...
     rate_limiter_cfg:
       min_size: ${training_manager.batch_size}
-      r_w_ratio: 10.0
+      # r_w_ratio: 10.0 # cannot set it if sync training...
   read_timeout: 120
 
 policy_server:
@@ -163,9 +166,9 @@ policy_server:
 populations:
   - population_id: default # population_id
     algorithm:
-      name: "QLearning"
+      name: "DQN"
       model_config:
-        model: "kuhn_poker.q_learning"
+        model: "leduc_poker.dqn"
         initialization:
           use_orthogonal: True
           gain: 1.
@@ -201,11 +204,11 @@ populations:
           min_epsilon: 0.1
           total_decay_steps: ${framework.stopper.kwargs.max_steps}
 
-        gamma: 1.0
+        gamma: 0.99
         use_cuda: False  # enable cuda or not
         use_q_head: False
         ppo_epoch: 5
-        num_mini_batch: 1  # the number of mini-batches
+        num_mini_batch: 4  # the number of mini-batches
         
         return_mode: new_gae
         gae:
@@ -228,6 +231,9 @@ populations:
 
         use_modified_mappo: False
 
+        target_update_freq: 100
+        target_update_lr: 1.0
+
       policy_init_cfg:
         agent_0: # agent_id
           new_policy_ctr_start: -1
@@ -243,41 +249,3 @@ populations:
               # policy_dir: trained_models/5v5/defence_1
 
           initial_policies:
-            # - policy_id: MAPPO_0
-            #   policy_dir: trained_models/5v5/imitation # the initial policy dir
-            # - policy_id: MAPPO_1
-            #   policy_dir: expr/log/gr_football/imitation_psro/2022-08-30-22-17-56/agent_0/MAPPO_1/best
-            # - policy_id: MAPPO_2
-            #   policy_dir: expr/log/gr_football/imitation_psro/2022-08-30-22-17-56/agent_0/MAPPO_2/best
-            # - policy_id: MAPPO_3
-            #   policy_dir: expr/log/gr_football/imitation_psro/2022-08-31-09-07-07/agent_0/MAPPO_1/best
-            # - policy_id: MAPPO_4
-            #   policy_dir: expr/log/gr_football/imitation_psro/2022-08-31-12-26-50/agent_0/MAPPO_4/best
-            # - policy_id: MAPPO_5
-            #   policy_dir: expr/log/gr_football/imitation_psro/2022-08-31-12-26-50/agent_0/MAPPO_5/best
-            # - policy_id: zs_one
-            #   policy_dir: trained_models/5v5_jidi/zs_one
-            # - policy_id: zs_two
-            #   policy_dir: trained_models/5v5_jidi/zs_two
-            # - policy_id: MrPasserby
-            #   policy_dir: trained_models/5v5/MrPasserby # the initial policy dir
-            # - policy_id: built_in
-            #   policy_dir: trained_models/5v5/built_in # the initial policy dir
-            # - policy_id: defence_1
-            #   policy_dir: trained_models/5v5/defence_1 # the initial policy dir
-            # - policy_id: hyperion
-            #   policy_dir: trained_models/5v5/hyperion # the initial policy dir
-            # - policy_id: imitation
-            #   policy_dir: trained_models/5v5/imitation # the initial policy dir
-            # - policy_id: defence_2
-            #   policy_dir: trained_models/5v5/defence_2 # the initial policy dir
-            # - policy_id: defence_3
-            #   policy_dir: trained_models/5v5/defence_3
-            # - policy_id: beat_defence_1
-            #   policy_dir: trained_models/5v5/beat_defence_1
-            # - policy_id: beat_counterattack3
-            #   policy_dir: trained_models/5v5/beat_counterattack3
-            # - policy_id: counter_attack3
-            #   policy_dir: trained_models/5v5/counter_attack3 # the initial policy dir
-            # - policy_id: passer_shot
-            #   policy_dir: trained_models/5v5/passer_shot

@@ -99,7 +99,10 @@ class PolicyDataManager:
         matrix[slices] = value
 
     def update_policy_data(self, eval_results, **kwargs):
-        self.update_func(self, eval_results, **kwargs)
+        try:
+            self.update_func(self, eval_results, **kwargs)
+        except Exception as e:
+            raise e
 
     def format_matrices_data(self, keys):
         matrices = {key: self.get_matrix_data(key).flatten() for key in keys}
