@@ -15,6 +15,11 @@ import math
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
+import os
+import pathlib
+BASE_DIR = str(pathlib.Path(__file__).resolve().parent.parent.parent)
+
+
 class MARolloutDesc:
     agent_id: List
     policy_id: Dict
@@ -65,7 +70,7 @@ class RandomPlayer:
         obs = kwargs.get(EpisodeKey.CUR_OBS)
         action = []
         for _ in range(obs.shape[0]):
-            action.append(self.action_space.sample())
+            action.append([self.action_space.sample()])
         action = np.array(action)
 
         return {
@@ -95,7 +100,7 @@ INDEPENDENT_OBS = False
 
 
 env_cfg = {'env_id': "battle_v3",
-           'map_size': 30, 'max_cycles': 500, 'global_encoder': False}# env_cfg = {'env_id': "simple_speaker_listener_v3", "global_encoder": not INDEPENDENT_OBS}
+           'map_size': 15, 'max_cycles': 100, 'global_encoder': False}# env_cfg = {'env_id': "simple_speaker_listener_v3", "global_encoder": not INDEPENDENT_OBS}
 
 env = Magent(0, None, env_cfg)
 from light_malib.registry.registration import DQN, MAPPO
@@ -105,8 +110,8 @@ from light_malib.utils.cfg import load_cfg
 # policy_0 = PPO("PPO", env.observation_spaces['red'], env.action_spaces['red'],
 #                model_config=cfg['populations'][0]['algorithm']['model_config'],
 #                custom_config=cfg['populations'][0]['algorithm']['custom_config'])
-cfg = '/home/yansong/Desktop/football_new/GRF_MARL/expr_configs/magent_battle/expr_dqn_marl.yaml'
-cfg = load_cfg(cfg)
+cfg = 'expr_configs/magent_battle/expr_dqn_marl.yaml'
+cfg = load_cfg(os.path.join(BASE_DIR,cfg))
 policy_0 = DQN('DQN', env.observation_spaces['red'], env.action_spaces['red'],
                model_config=cfg['populations'][0]['algorithm']['model_config'],
                custom_config=cfg['populations'][0]['algorithm']['custom_config'])
@@ -114,8 +119,8 @@ policy_0 = DQN('DQN', env.observation_spaces['red'], env.action_spaces['red'],
 
 
 behavior_policies = {
-    "red": ('policy_0', policy_0),
-    "blue": ('policy_1', RandomPlayer(env.action_spaces['red'],
+    "agent_0": ('policy_0', policy_0),
+    "agent_1": ('policy_1', RandomPlayer(env.action_spaces['red'],
                                       env.observation_spaces['red']))
 }
 
@@ -139,7 +144,7 @@ trainer = DQNTrainer("ppo_trainer")
 
 
 # print(behavior_policies)
-for _ in range(1):
+for _ in range(2):
     env = Magent(0, None, env_cfg)
 
     rollout_results = rollout_func(

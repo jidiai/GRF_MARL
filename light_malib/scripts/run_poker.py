@@ -72,18 +72,18 @@ class HumanPlayer:
             EpisodeKey.ACTOR_RNN_STATE: kwargs[EpisodeKey.ACTOR_RNN_STATE]
         }
 
-cfg_path= 'expr_configs/poker/expr_ppo_psro.yaml' #'expr_configs/poker/expr_q_learning_psro.yaml'
+cfg_path= 'expr_configs/kuhn_poker/expr_q_learning_psro.yaml' #'expr_configs/poker/expr_q_learning_psro.yaml'
 cfg = load_cfg(os.path.join(BASE_DIR, cfg_path))
 
 policy_id_0 = "policy_0"
 policy_id_1 = "policy_1"
 
-policy_0 = MAPPO('ppo', None, None, cfg.populations[0].algorithm.model_config,
+policy_0 = QLearning('QLearning', None, None, cfg.populations[0].algorithm.model_config,
                      cfg.populations[0].algorithm.custom_config,)
-policy_1 = MAPPO('ppo', None, None, cfg.populations[0].algorithm.model_config,
+policy_1 = QLearning('QLearning', None, None, cfg.populations[0].algorithm.model_config,
                      cfg.populations[0].algorithm.custom_config,)
 
-trainer = MAPPOTrainer('trainer1')
+trainer = QLearningTrainer('trainer1')
 
 rollout_desc = RolloutDesc("agent_0", None, None, None, None, None)
 behavior_policies = {
@@ -112,7 +112,7 @@ for i in range(2):
         data_server=datasever,
         padding_length=10,
         render=True,
-        episode_mode='traj'
+        episode_mode=cfg.rollout_manager.worker.episode_mode
     )
 
 data_list = []

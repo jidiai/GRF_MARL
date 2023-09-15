@@ -22,7 +22,7 @@ class Encoder(encoder_cls):
     def __init__(self):
         super().__init__(action_spaces=env.action_spaces['red_0'],
                          observation_spaces=Box(0.0, 2.0, (845,)), #env.observation_spaces['red_0'],
-                         state_space=Box(0.0, 2.0, (845,))) #env.observation_spaces['red_0'])
+                         state_space=Box(0.0, 2.0, (845,))) #env.observation_spaces['red_0'])  13*13*5
 
 
 class Rewarder:

@@ -45,7 +45,7 @@ class MAPPOTrainer(Trainer):
     def optimize(self, batch, **kwargs):
         total_opt_result = defaultdict(lambda: 0)
         policy = self.loss.policy
-        
+
         ppo_epoch = policy.custom_config["ppo_epoch"]
         num_mini_batch = policy.custom_config["num_mini_batch"]  # num_mini_batch
         kl_early_stop = policy.custom_config.get("kl_early_stop", None)

@@ -38,6 +38,7 @@ from light_malib.algorithm.dqn.policy import DQN
 from light_malib.envs.gr_football.env import GRFootballEnv
 from light_malib.envs.kuhn_poker.env import KuhnPokerEnv
 from light_malib.envs.leduc_poker.env import LeducPokerEnv
+from light_malib.envs.magent.env import Magent
 
 from light_malib.framework.scheduler.stopper.common.win_rate_stopper import (
     WinRateStopper,

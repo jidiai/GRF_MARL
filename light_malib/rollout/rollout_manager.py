@@ -78,7 +78,7 @@ class RolloutManager:
         self.stop_flag_lock = threading.Lock()
                     
     def rollout(self, rollout_desc: RolloutDesc):
-        
+
         self.data_buffer = queue.Queue()
         self.data_buffer_lock = threading.Lock()
         self.data_buffer_ready = threading.Condition(self.data_buffer_lock)

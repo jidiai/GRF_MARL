@@ -1,5 +1,5 @@
 expr_group: magent
-expr_name: marl_dqn
+expr_name: marl_dqn_vs_random
 log_dir: logs
 log_name: 'Marl'
 seed: 123
@@ -20,20 +20,21 @@ framework:
   max_rounds: 1         # psro rounds
   meta_solver: "nash"         # 'nash', 'uniform', 'pfsp'
   sync_training: True
+  on_policy: False
   stopper:
     type: "win_rate_stopper"
     kwargs:
       min_win_rate: 1.1
-      max_steps: 700          #iteration at each psro round
+      max_steps: 50000          #iteration at each psro round
 
 
 agent_manager:
-  num_agents: 1
+  num_agents: 2
 #  agent_ids: ['red']
   share_policies: False
 
 evaluation_manager:
-  num_eval_rollouts: 5
+  num_eval_rollouts: 20
 
 policy_data_manager:
   update_func: "gym"
@@ -81,7 +82,7 @@ rollout_manager:
   saving_interval: 10000 # the sequence of dump model's weight
   batch_size: ${rollout_manager.num_workers}
   eval_batch_size: 100
-  eval_freq: 500 # epochs
+  eval_freq: 50 # epochs
   min_samples: ${training_manager.batch_size}
   rollout_metric_cfgs:
     reward:
@@ -96,13 +97,15 @@ rollout_manager:
     distributed:
       resources:
         num_cpus: 1
-    rollout_length: 25
-    eval_rollout_length: 25
-    sample_length: 25
+    rollout_length: 200
+    eval_rollout_length: 200
+    sample_length: 200
     padding_length: # of not use in gr_football
     rollout_func_name: "rollout_func_magent"
-    rollout_func_cfg:
-      episode_mode: "time-step"    #traj: whole trajectory (for PPO) and time-step
+    episode_mode: 'time-step'
+    credit_reassign:
+#    rollout_func_cfg:
+#      episode_mode: "time-step"    #traj: whole trajectory (for PPO) and time-step
     mix_opponent: False
     envs:
       - cls: "magent"
@@ -123,7 +126,7 @@ training_manager:
   master_addr: "127.0.0.1"
   master_port:  #"12774"
   local_queue_size: 1
-  batch_size: 128 # how many data sample from DatasetServer per time.
+  batch_size: 256 # how many data sample from DatasetServer per time.
   num_prefetchers: 1
   data_prefetcher:
     distributed:
@@ -141,8 +144,8 @@ training_manager:
         resources:
           - ["node:${distributed.nodes.master.ip}",0.01]
     optimizer: "Adam"
-    actor_lr: 5e-4
-    critic_lr: 5e-4
+    actor_lr: 1e-3
+    critic_lr: 1e-3
     opti_eps: 1.e-5
     weight_decay: 0.05
     lr_decay: False            #update_linear_schedule
@@ -171,7 +174,7 @@ policy_server:
         - ["node:${distributed.nodes.master.ip}",0.01]
 
 populations:
-  - population_id: 'pop1' # population_id
+  - population_id: 'default' # population_id
     agent_group: "agent_0"
     algorithm:
       name: "DQN"
@@ -211,7 +214,7 @@ populations:
         gamma: 0.99
         use_cuda: False  # enable cuda or not
         use_q_head: False
-        ppo_epoch: 5
+        epoch: 1
         num_mini_batch: 1  # the number of mini-batches
         max_grad_norm: 0.5
         
@@ -253,7 +256,7 @@ populations:
           new_policy_ctr_start: -1
           init_cfg:
             - condition: "==0" # condition if True in order
-              strategy: pretrained # now support pretrained, inherit_last, random
-              policy_id: built_in
-              policy_dir: light_malib/trained_models/gr_football/5_vs_5/built_in
+              strategy: random # now support pretrained, inherit_last, random
+              policy_id: #built_in
+              policy_dir: #light_malib/trained_models/gr_football/5_vs_5/built_in
           initial_policies:                         #initial population

@@ -43,7 +43,7 @@ class EvaluationManager:
         eval_results = ray.get(
             self.rollout_manager.rollout_eval.remote(rollout_eval_desc)
         )
-        # breakpoint()
+
         for match, value in eval_results.items():
             # breakpoint()
             score_dict = {}

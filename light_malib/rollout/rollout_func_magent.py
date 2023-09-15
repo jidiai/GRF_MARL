@@ -87,6 +87,8 @@ def rollout_func(
     render = kwargs.get("render", False)
     episode_mode = kwargs['episode_mode']
     agent_id_list = rollout_desc.agent_id
+    main_agent_id=rollout_desc.agent_id
+    assert main_agent_id in behavior_policies
 
     policy_ids = OrderedDict()
     feature_encoders = OrderedDict()
@@ -106,11 +108,12 @@ def rollout_func(
 
     if render:
         env.render()
+        time.sleep(0.5)
 
     global_timer.time("env_step_start", "env_step_end", "env_step")
 
     init_rnn_states = {
-        agent_id: behavior_policies[agent_id][1].get_initial_state(
+        env.agent_id_mapping[agent_id]: behavior_policies[env.agent_id_mapping[agent_id]][1].get_initial_state(
             batch_size=env.num_players[agent_id]
         )
         for agent_id in env.agent_ids
@@ -163,7 +166,7 @@ def rollout_func(
 
         # save data of trained agent for training
 
-        step_data_list.append(step_data[rollout_desc.agent_id[0]])
+        step_data_list.append(step_data[rollout_desc.agent_id])
 
         env_rets=rename_field(env_rets, EpisodeKey.NEXT_OBS, EpisodeKey.CUR_OBS)
         env_rets=rename_field(env_rets, EpisodeKey.NEXT_STATE, EpisodeKey.CUR_STATE)
@@ -196,19 +199,23 @@ def rollout_func(
         for aid in agent_id_list:
             # breakpoint()
             # tabklenale!!!!
-            table_name = f'{aid}_{rollout_desc.policy_id[aid][0]}'
-            data_server.save(
-                table_name
-                ,
-                episode_dict,
-            )
+            table_name = table_name = default_table_name(
+                                            rollout_desc.agent_id,
+                                            rollout_desc.policy_id,
+                                            rollout_desc.share_policies,
+                                        )
+
+            if hasattr(data_server.save, "remote"):
+                data_server.save.remote(table_name, episode_dict)
+            else:
+                data_server.save(
+                    table_name
+                    ,
+                    episode_dict,
+                )
 
     stats = env.get_episode_stats()
 
-    # if not eval:
-    #     stats['agent_0']['eps'] = current_eps
-    return {
-        "main_agent_id": rollout_desc.agent_id,
-        "policy_ids": policy_ids,
-        "stats": stats,
-    }
+    results = {"main_agent_id": rollout_desc.agent_id, 'policy_ids': policy_ids, "stats": stats}
+
+    return {'results': [results], "steps": env.step_ctr}

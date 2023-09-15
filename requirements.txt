@@ -25,4 +25,5 @@ colorlog==6.6.0
 #hiredis==2.0.0
 matplotlib==3.5.3
 pandas~=1.5.1
+pettingzoo[magent]==1.12.0
 wandb

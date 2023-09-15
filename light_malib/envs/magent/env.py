@@ -2,7 +2,7 @@ import importlib
 import gym
 from light_malib.registry import registry
 from light_malib.utils.episode import EpisodeKey
-
+from light_malib.utils.logger import Logger
 from ..base_env import BaseEnv
 from light_malib.utils.episode import EpisodeKey
 import numpy as np
@@ -75,12 +75,18 @@ class Magent(BaseEnv):
         self._step_ctr = 0
         self._is_terminated = False
         self.rollout_length = max_cycles
-        self.env_handle = self._env.env.get_handles()
+        self.env_handle = self._env.env.get_handles()       #handles align with possible agent: [red, blue]
 
         all_agent_ids = self._env.possible_agents
         team_ids = [i.split('_')[0] for i in all_agent_ids]
-        self.agent_ids = list(set(team_ids))
+        self.agent_ids = ['red', 'blue']       #list(set(team_ids))
         self.all_agent_ids = all_agent_ids
+
+        self.mapped_agent_ids = [f"agent_{i}" for i in range(len(self.agent_ids))]
+        self.agent_id_mapping = dict(zip(self.agent_ids, self.mapped_agent_ids))
+        self.agent_id_reverse_mapping = dict(zip(self.mapped_agent_ids,self.agent_ids))
+
+        self.env_handle_dict = dict(zip(self.agent_ids, self.env_handle))
 
         self.num_players = {}
         for aid in self.agent_ids:
@@ -108,6 +114,13 @@ class Magent(BaseEnv):
             # if aid in global_encoder:
             self.feature_encoders[aid] = DefaultFeatureEncoder(self._action_space[aid],
                                                                    self._observation_space[aid],aid)
+        # self.stats = {self.agent_id_mapping[agent_id]: {
+        #     "score": 0.0,
+        #     "total_reward": 0.0,
+        #     f"{agent_id}'s reward": 0,
+        # } for agent_id in self.agent_ids
+        # }
+
             # else:
             #     self.feature_encoders[aid] = IndividualFeatureEncoder(self._action_space[aid], self._observation_space[aid], aid)
     @property
@@ -145,9 +158,16 @@ class Magent(BaseEnv):
         # self.stats={
         #     "total_steps": 0,
         # }
-        self.stats={agent_id: {
-            "total_reward": 0.0,
-            f"{agent_id}'s reward": 0,
+
+        total_alive = sum([sum(self._env.env.get_alive(i)) for i in self.env_handle])
+
+        self.stats={self.agent_id_mapping[agent_id]: {
+            "alive agents":sum(self._env.env.get_alive(self.env_handle_dict[agent_id])),
+            "oppo alive agents": total_alive-sum(self._env.env.get_alive(self.env_handle_dict[agent_id])),
+            "score": 0.0,
+            "reward": 0,
+            "win": 0.,
+            "total_steps": 0,
         } for agent_id in self.agent_ids
         }
 
@@ -167,7 +187,7 @@ class Magent(BaseEnv):
             dones[agent_id] = np.zeros((_action_mask.shape[0], 1))
 
         rets = {
-            agent_id:{
+            self.agent_id_mapping[agent_id]:{
                 EpisodeKey.CUR_OBS: encoded_obs[agent_id],
                 EpisodeKey.CUR_STATE: encoded_obs[agent_id],
                 EpisodeKey.ACTION_MASK: action_masks[agent_id],
@@ -187,7 +207,7 @@ class Magent(BaseEnv):
             if len(action_set[EpisodeKey.ACTION].shape)==3:
                 action_set[EpisodeKey.ACTION] = action_set[EpisodeKey.ACTION][0]
             for a in action_set[EpisodeKey.ACTION]:
-                filtered_actions[f'{aid}_{pid}'] = a
+                filtered_actions[f'{self.agent_id_reverse_mapping[aid]}_{pid}'] = a
                 pid+=1
 
 
@@ -232,7 +252,7 @@ class Magent(BaseEnv):
                                                   np.zeros((add_on_num,
                                                             dones[agent_id].shape[-1]))])
         return {
-            agent_id: {
+            self.agent_id_mapping[agent_id]: {
                 EpisodeKey.NEXT_OBS: encoded_obs[agent_id],
                 EpisodeKey.NEXT_STATE: encoded_obs[agent_id],
                 EpisodeKey.NEXT_ACTION_MASK: action_masks[agent_id],
@@ -247,9 +267,25 @@ class Magent(BaseEnv):
 
     def update_episode_stats(self, reward):
 
+        total_alive = sum([sum(self._env.env.get_alive(i)) for i in self.env_handle])
         for agent_id, r in reward.items():
-            self.stats[agent_id][f"{agent_id}'s reward"] += sum(r)
-        # self.stats['total_steps'] = self._step_ctr
+            self.stats[self.agent_id_mapping[agent_id]]["reward"] += sum(r)
+            _alive = sum(self._env.env.get_alive(self.env_handle_dict[agent_id]))
+            self.stats[self.agent_id_mapping[agent_id]]['alive agents'] = sum(self._env.env.get_alive(self.env_handle_dict[agent_id]))
+            self.stats[self.agent_id_mapping[agent_id]]['oppo alive agents'] = total_alive - _alive
+            self.stats[self.agent_id_mapping[agent_id]]['total_steps'] = self._step_ctr
+
+            if self._is_terminated:
+                if total_alive - _alive == 0 and _alive >0:
+                    #all opponents are dead and ours are not
+                    self.stats[self.agent_id_mapping[agent_id]]['win'] = 1.
+
+                if _alive > total_alive - _alive:       #we have more soldiers left
+                    self.stats[self.agent_id_mapping[agent_id]]['score'] = 1.
+                elif _alive < total_alive - _alive:
+                    self.stats[self.agent_id_mapping[agent_id]]['score'] = 0.
+                else:
+                    self.stats[self.agent_id_mapping[agent_id]]['score'] = 0.5
 
     def get_episode_stats(self):
         return self.stats
