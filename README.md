@@ -19,6 +19,10 @@ Documentation: [grf-marl.readthedocs.io/](https://grf-marl.readthedocs.io/)
 
 Implementation for CDS_QMIX and CDS_QPLEX: [MyCDS benchmark](https://github.com/DiligentPanda/MyCDS/tree/benchmark)
 
+Check out the paper at [Boosting Studies of Multi-Agent Reinforcement Learning on Google Research Football Environment: the Past, Present, and Future
+](https://arxiv.org/abs/2309.12951)
+
+
 ----
 
 ## Contents
