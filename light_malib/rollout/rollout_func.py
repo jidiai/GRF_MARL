@@ -175,6 +175,7 @@ def submit_batches(data_server,episode, rollout_desc,credit_reassign_cfg=None,as
             EpisodeKey.CUR_OBS: episode[step][EpisodeKey.CUR_OBS],  # [np.newaxis, ...],
             EpisodeKey.ACTION_MASK: episode[step][EpisodeKey.ACTION_MASK],  # [np.newaxis, ...],
             EpisodeKey.ACTION: episode[step][EpisodeKey.ACTION],  # [np.newaxis, ...],
+            EpisodeKey.ACTION_LOG_PROB: episode[step][EpisodeKey.ACTION_LOG_PROB],
             EpisodeKey.REWARD: episode[step][EpisodeKey.REWARD],  # [np.newaxis, ...],
             EpisodeKey.DONE: episode[step][EpisodeKey.DONE],  # [np.newaxis, ...],
             EpisodeKey.NEXT_OBS: episode[step + 1][EpisodeKey.CUR_OBS],  # [np.newaxis, ...],

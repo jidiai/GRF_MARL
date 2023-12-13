@@ -27,6 +27,10 @@ from light_malib.algorithm.bc.policy import BC
 from light_malib.algorithm.bc.loss import BCLoss
 from light_malib.algorithm.bc.trainer import BCTrainer
 
+from light_malib.algorithm.ddpg.policy import DDPG
+from light_malib.algorithm.ddpg.loss import DDPGLoss
+from light_malib.algorithm.ddpg.trainer import DDPGTrainer
+
 
 from light_malib.envs.gr_football.env import GRFootballEnv
 

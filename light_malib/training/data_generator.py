@@ -19,11 +19,17 @@ from light_malib.utils.timer import global_timer
 
 
 def simple_data_generator(data, num_mini_batch, device, shuffle=True):
-    assert len(data[EpisodeKey.CUR_OBS].shape) == 4, "{}".format(
-        {k: v.shape for k, v in data.items()}
-    )
-    len_traj, n_rollout_threads, n_agent, _ = data[EpisodeKey.CUR_OBS].shape
-    batch_size = len_traj * n_rollout_threads  # * n_agent
+    # assert len(data[EpisodeKey.CUR_OBS].shape) == 4, "{}".format(
+    #     {k: v.shape for k, v in data.items()}
+    # )
+    if len(data[EpisodeKey.CUR_OBS].shape) == 4:
+        len_traj, n_rollout_threads, n_agent, _ = data[EpisodeKey.CUR_OBS].shape
+        batch_size = len_traj * n_rollout_threads  # * n_agent
+        offset = 2
+
+    elif len(data[EpisodeKey.CUR_OBS].shape) == 3:
+        batch_size, n_agent, _ = data[EpisodeKey.CUR_OBS].shape
+        offset = 1
 
     batch = {}
     for k in data:
@@ -34,7 +40,7 @@ def simple_data_generator(data, num_mini_batch, device, shuffle=True):
             else:
                 batch[k] = data[k]
             global_timer.time("data_copy_start", "data_copy_end", "data_copy")
-            batch[k] = batch[k].reshape(batch_size, *data[k].shape[2:])
+            batch[k] = batch[k].reshape(batch_size, *data[k].shape[offset:])
         except Exception:
             Logger.error("k: {}".format(k))
             raise Exception
@@ -43,7 +49,7 @@ def simple_data_generator(data, num_mini_batch, device, shuffle=True):
         for k in batch:
             # batch_size,n_agent,...
             # -> batch_size*n_agent,...
-            batch[k] = batch[k].reshape(-1, *batch[k].shape[2:])
+            batch[k] = batch[k].reshape(-1, *batch[k].shape[offset:])
         batch = {k: v for k, v in batch.items()}
         yield batch
         return
@@ -68,7 +74,7 @@ def simple_data_generator(data, num_mini_batch, device, shuffle=True):
             # batch_size,n_agent,...
             # -> batch_size*n_agent,...
             tmp_batch[k] = batch[k][indices]
-            tmp_batch[k] = tmp_batch[k].reshape(-1, *tmp_batch[k].shape[2:])
+            tmp_batch[k] = tmp_batch[k].reshape(-1, *tmp_batch[k].shape[offset:])
         yield {k: v for k, v in tmp_batch.items()}
 
 def simple_team_data_generator(data, num_mini_batch, device, shuffle=False):
