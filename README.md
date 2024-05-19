@@ -34,6 +34,7 @@ Check out the paper at [Boosting Studies of Multi-Agent Reinforcement Learning o
 - [Google Reseach Football Toolkit](#google-reseach-football-toolkit)
 - [Pre-trained policies](#pre-trained-policies)
 - [Online Ranking](#online-ranking)
+- [Contribution](#contribution)
 - [Tensorboard tags explained](#tensorboard-tags-explained)
 - [Contact](#contact)
 
@@ -209,6 +210,22 @@ At this stage, we release some of our trained model for use as initializations o
 ## Online Ranking
 
 See [documentation](https://grf-marl.readthedocs.io/).
+
+----
+
+## Contribution
+
+Thanks for your interests! The project is open for contribution. You can either add new environment or algorithm 
+to be tested under the framework. 
+
+For new **environment**, feel free to check out this [example](https://github.com/jidiai/ai_lib/tree/V2_mpe/envs).
+
+For new **algorithm**, it needs to be put in the directory `\light_malib\algorithm\` and should include the following components:
+1. `loss.py`: given samples, how to compute loss function and performs gradient update;
+2. `policy.py`: policy instance for action generation mainly;
+3. `trainer.py`: trainer class for data preprocessing;
+
+For each **policy setting** (actor/critic network, feature settings, etc), please check out this [doc](/mappo.md).
 
 ----
 
